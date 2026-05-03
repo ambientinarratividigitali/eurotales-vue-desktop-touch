@@ -1,0 +1,343 @@
+/* ════════════════════════════════════════════════════════════════════
+   RISONANZE LINGUISTICHE — Stili globali
+   ──────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ── Design tokens ───────────────────────────────────────────────── */
+:root {
+  /* Palette identità */
+  --rosso:      #912B3D;
+  --rosso-soft: rgba(145, 43, 61, 0.85);
+  --verde:      #2B917F;
+  --verde-soft: rgba(43, 145, 127, 0.85);
+  --oro:        #DBB971;
+  --oro-hover:  #C9A85E;
+
+  /* Neutri */
+  --nero:        #1a1a1a;
+  --nero-deep:   #0e0c0a;
+  --bianco:      #f9f4ee;
+  --grigio:      #6b6b6b;
+  --grigio-light:#e8e2d9;
+
+  /* Sfondi e overlay */
+  --bg-map:        #d4c9b4;
+  --overlay-ieri:  rgba(14, 10, 8, 0.72);
+  --overlay-oggi:  rgba(8, 14, 14, 0.72);
+
+  /* Trasparenze comuni */
+  --w-05: rgba(255,255,255,0.05);
+  --w-08: rgba(255,255,255,0.08);
+  --w-12: rgba(255,255,255,0.12);
+  --w-18: rgba(255,255,255,0.18);
+  --w-22: rgba(255,255,255,0.22);
+  --w-30: rgba(255,255,255,0.30);
+  --w-45: rgba(255,255,255,0.45);
+  --w-65: rgba(255,255,255,0.65);
+  --w-85: rgba(255,255,255,0.85);
+
+  --b-50: rgba(0,0,0,0.50);
+  --b-65: rgba(0,0,0,0.65);
+  --b-75: rgba(0,0,0,0.75);
+
+  /* Tipografia */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'Montserrat', sans-serif;
+
+  /* Scale fluide — ottimizzate per 1080p → 4K touch 55" */
+  --fs-xs:    clamp(11px, 0.85vw, 18px);
+  --fs-sm:    clamp(12px, 1vw,    20px);
+  --fs-base:  clamp(14px, 1.15vw, 24px);
+  --fs-md:    clamp(16px, 1.3vw,  28px);
+  --fs-lg:    clamp(20px, 1.8vw,  36px);
+  --fs-xl:    clamp(26px, 2.4vw,  48px);
+  --fs-2xl:   clamp(32px, 3.5vw,  72px);
+
+  /* Spaziature fluide */
+  --sp-1: clamp(4px,  0.4vw, 8px);
+  --sp-2: clamp(8px,  0.8vw, 16px);
+  --sp-3: clamp(12px, 1.2vw, 24px);
+  --sp-4: clamp(16px, 1.6vw, 32px);
+  --sp-5: clamp(24px, 2.4vw, 48px);
+  --sp-6: clamp(32px, 3.2vw, 64px);
+
+  /* Geometria */
+  --radius-sm:  8px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-pill: 50px;
+
+  /* Transizioni */
+  --tr-fast:  0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-base:  0.3s  cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-slow:  0.4s  cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index scale */
+  --z-bg:      0;
+  --z-overlay: 1;
+  --z-content: 5;
+  --z-header:  10;
+  --z-loading: 20;
+  --z-fixed:   100;
+  --z-modal:   9999;
+}
+
+/* ── Reset minimal ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #app {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--nero-deep);
+  color: var(--bianco);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  color: inherit;
+  background: none;
+}
+
+img { max-width: 100%; height: auto; }
+
+/* ── Bottoni base ────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-base);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background var(--tr-base), border-color var(--tr-base), color var(--tr-base);
+  min-height: 44px; /* target touch */
+}
+
+.btn-oro {
+  background: var(--oro);
+  color: white;
+}
+.btn-oro:hover { background: var(--oro-hover); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--w-30);
+  color: white;
+}
+.btn-ghost:hover { background: var(--w-12); }
+
+.btn-ghost-dark {
+  background: var(--b-50);
+  border: 1.5px solid var(--w-22);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+.btn-ghost-dark:hover {
+  background: var(--w-12);
+  border-color: var(--w-45);
+}
+
+/* ── Top bar standard delle pagine ───────────────────────────────── */
+.top-bar {
+  position: relative;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) var(--sp-4);
+  background: linear-gradient(to bottom, var(--b-65), transparent);
+  gap: var(--sp-2);
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  flex: 1;
+  text-align: center;
+}
+.page-title.is-ieri { color: var(--rosso); }
+.page-title.is-oggi { color: var(--verde); }
+
+.header-actions {
+  display: flex;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+/* ── Etichetta panel (descrittore sopra grafici/mappe) ───────────── */
+.panel-label {
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--w-45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-height: 24px;
+  padding: var(--sp-1) 0;
+}
+
+/* ── Loading & spinner ───────────────────────────────────────────── */
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-loading);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  color: white;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--w-12);
+  border-top-color: var(--rosso);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.spinner.is-oggi { border-top-color: var(--verde); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Modali ──────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: var(--b-75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+}
+
+.modal-box {
+  background: #1c1814;
+  border: 1px solid var(--w-12);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  max-width: 720px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  overflow: hidden;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--rosso);
+  flex-shrink: 0;
+}
+
+/* ── Tabella lingue (modale) ─────────────────────────────────────── */
+.lingue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2) var(--sp-3);
+  overflow-y: auto;
+  padding-right: var(--sp-1);
+}
+
+.lingua-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-base);
+  color: var(--w-85);
+}
+
+.lingua-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .lingue-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Search (modale) ─────────────────────────────────────────────── */
+.search-input {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--w-22);
+  background: var(--w-05);
+  color: white;
+  font-size: var(--fs-base);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color var(--tr-base);
+}
+.search-input:focus { border-color: var(--oro); }
+
+.search-results {
+  max-height: 40vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.search-item {
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  transition: background var(--tr-fast);
+}
+.search-item:hover { background: var(--w-12); }
+
+.no-results {
+  color: var(--w-45);
+  font-size: var(--fs-sm);
+  text-align: center;
+  padding: var(--sp-3);
+}
+
+/* ── Scrollbar fine condivisa ────────────────────────────────────── */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--w-18) transparent;
+}
+.thin-scroll::-webkit-scrollbar { width: 4px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--w-18);
+  border-radius: 2px;
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Transizioni router/modali ───────────────────────────────────── */
+.fade-enter-active, .fade-leave-active { transition: opacity var(--tr-base); }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/* ── Touch & 4K hints ────────────────────────────────────────────── */
+@media (min-width: 2560px) {
+  /* Display 4K (55"): aumenta target click e tipografia */
+  .btn { min-height: 56px; }
+  .lang-btn, .nav-btn, .fixed-back-btn { min-height: 56px; }
+}
