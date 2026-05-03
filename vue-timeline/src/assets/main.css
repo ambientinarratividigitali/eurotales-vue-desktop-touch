@@ -1,0 +1,335 @@
+/* ═══════════════════════════════════════════════════════════════════
+   TIMELINE EUROTALES — Stili globali con design tokens
+   Ottimizzato per: desktop standard 1080p ↔ chiosco touch 4K 55"
+   ─────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* ── Design tokens ────────────────────────────────────────────── */
+:root {
+  /* Palette identità Eurotales */
+  --rosso:      #912B3D;
+  --rosso-dark: #6f1f2e;
+  --verde:      #2B917F;
+  --oro:        #DBB971;
+  --oro-hover:  #C9A85E;
+  --beige:      #d4c9b4;
+  --beige-deep: #c0b59f;
+
+  /* Neutri */
+  --nero-deep:    #0e0c0a;
+  --nero:         #1a1a1a;
+  --grigio-dark:  #2b2b2b;
+  --grigio-mid:   #6b6b6b;
+  --grigio-light: #e8e2d9;
+  --bianco:       #f9f4ee;
+
+  /* Trasparenze */
+  --w-05: rgba(255,255,255,0.05);
+  --w-08: rgba(255,255,255,0.08);
+  --w-12: rgba(255,255,255,0.12);
+  --w-22: rgba(255,255,255,0.22);
+  --w-30: rgba(255,255,255,0.30);
+  --w-45: rgba(255,255,255,0.45);
+  --w-65: rgba(255,255,255,0.65);
+  --w-85: rgba(255,255,255,0.85);
+
+  --b-50: rgba(0,0,0,0.50);
+  --b-65: rgba(0,0,0,0.65);
+  --b-75: rgba(0,0,0,0.75);
+  --b-85: rgba(0,0,0,0.85);
+
+  /* Tipografia */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'Montserrat', sans-serif;
+
+  /* Scale fluide ottimizzate 1080p → 4K touch 55" */
+  --fs-xs:    clamp(11px, 0.85vw, 18px);
+  --fs-sm:    clamp(12px, 1vw,    20px);
+  --fs-base:  clamp(14px, 1.15vw, 24px);
+  --fs-md:    clamp(16px, 1.3vw,  28px);
+  --fs-lg:    clamp(20px, 1.8vw,  36px);
+  --fs-xl:    clamp(26px, 2.4vw,  48px);
+  --fs-2xl:   clamp(32px, 3.5vw,  72px);
+
+  /* Spaziature fluide */
+  --sp-1: clamp(4px,  0.4vw,  8px);
+  --sp-2: clamp(8px,  0.8vw,  16px);
+  --sp-3: clamp(12px, 1.2vw,  24px);
+  --sp-4: clamp(16px, 1.6vw,  32px);
+  --sp-5: clamp(24px, 2.4vw,  48px);
+  --sp-6: clamp(32px, 3.2vw,  64px);
+
+  /* Geometria */
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-pill: 50px;
+
+  /* Transizioni */
+  --tr-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-base: 0.3s  cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-slow: 0.5s  cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index scale */
+  --z-bg:      0;
+  --z-overlay: 1;
+  --z-content: 5;
+  --z-header:  10;
+  --z-fixed:   100;
+  --z-modal:   9999;
+}
+
+/* ── Reset minimal ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--nero-deep);
+  color: var(--bianco);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Niente delay 300ms su double-tap-zoom */
+  touch-action: manipulation;
+  /* Niente pull-to-refresh accidentale */
+  overscroll-behavior: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  touch-action: manipulation;
+}
+
+img { max-width: 100%; height: auto; }
+
+/* ── Bottoni base ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-base);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all var(--tr-base);
+  min-height: 48px;
+}
+.btn:active { transform: scale(0.97); transition: transform 80ms ease; }
+
+.btn-oro {
+  background: var(--oro);
+  color: white;
+}
+.btn-oro:hover { background: var(--oro-hover); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--w-30);
+  color: white;
+}
+.btn-ghost:hover { background: var(--w-12); }
+
+.btn-ghost-dark {
+  background: var(--b-50);
+  border: 1.5px solid var(--w-22);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+.btn-ghost-dark:hover {
+  background: var(--w-12);
+  border-color: var(--w-45);
+}
+
+/* ── Loading screen ──────────────────────────────────────────── */
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  background: var(--b-65);
+  backdrop-filter: blur(4px);
+  color: white;
+}
+
+.spinner {
+  width: clamp(48px, 4vw, 80px);
+  height: clamp(48px, 4vw, 80px);
+  border: 3px solid var(--w-12);
+  border-top-color: var(--rosso);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Modali ──────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: var(--b-85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+}
+
+.modal-box {
+  background: #1c1814;
+  border: 1px solid var(--w-12);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  max-width: 90vw;
+  width: 100%;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  overflow: hidden;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--rosso);
+  flex-shrink: 0;
+}
+
+/* ── Lang switcher comune ────────────────────────────────────── */
+.lang-switch { display: flex; gap: var(--sp-1); }
+
+.lang-btn {
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: var(--grigio-light);
+  border: 1.5px solid transparent;
+  color: var(--grigio-mid);
+  cursor: pointer;
+  transition: all var(--tr-base);
+  min-height: 44px;
+  min-width: 56px;
+  touch-action: manipulation;
+}
+.lang-btn.active {
+  background: var(--rosso);
+  color: white;
+  border-color: var(--rosso);
+}
+.lang-btn:hover  { background: var(--beige-deep); color: var(--grigio-dark); }
+.lang-btn.active:hover { background: var(--rosso-dark); color: white; }
+.lang-btn:active { transform: scale(0.96); }
+
+/* ── Scrollbar fine ──────────────────────────────────────────── */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--w-22) transparent;
+}
+.thin-scroll::-webkit-scrollbar       { width: 8px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--w-22);
+  border-radius: 4px;
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Transizioni ─────────────────────────────────────────────── */
+.fade-enter-active, .fade-leave-active { transition: opacity var(--tr-base); }
+.fade-enter-from, .fade-leave-to       { opacity: 0; }
+
+/* ── Override TimelineJS ─────────────────────────────────────── */
+.tl-timeline {
+  background: transparent !important;
+  font-family: var(--font-body) !important;
+}
+.tl-timenav,
+.tl-timenav-slider,
+.tl-timenav-slider-background {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+.tl-storyslider { display: none !important; }
+
+/* Marker della timeline: dimensioni fluide leggibili a 1080p e 4K */
+.tl-timemarker-content-container {
+  height: clamp(80px, 8vh, 140px) !important;
+  width: clamp(110px, 10vw, 200px) !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 80ms ease;
+}
+.tl-timemarker-content-container:active {
+  transform: scale(0.96);
+}
+
+.tl-timemarker .tl-headline {
+  font-size: clamp(11px, 0.95vw, 18px) !important;
+  line-height: 1.25 !important;
+  padding: 6px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  -webkit-line-clamp: 5 !important;
+  text-transform: none !important;
+}
+.tl-timemarker-text { padding: 4px !important; }
+
+/* Frecce navigazione TimelineJS: scale per touch 4K */
+.tl-slidenav-next,
+.tl-slidenav-previous {
+  touch-action: manipulation;
+}
+
+/* ── Touch device feedback ───────────────────────────────────── */
+/* Su touchscreen :hover si appiccica dopo il tap; lo neutralizzo */
+@media (hover: none) {
+  .btn:hover,
+  .lang-btn:hover,
+  .lang-btn.active:hover {
+    background: inherit;
+    color: inherit;
+  }
+}
+
+/* ── Override 4K (chiosco touch 55") ─────────────────────────── */
+@media (min-width: 2560px) {
+  .btn      { min-height: 64px; padding: var(--sp-3) var(--sp-5); }
+  .lang-btn { min-height: 56px; min-width: 72px; }
+  .modal-box { padding: var(--sp-6); border-radius: 32px; }
+  .thin-scroll::-webkit-scrollbar { width: 14px; }
+  .thin-scroll::-webkit-scrollbar-thumb { border-radius: 7px; }
+
+  /* TimelineJS scrollbar interna su 4K: più visibile */
+  .tl-timenav ::-webkit-scrollbar { width: 14px !important; height: 14px !important; }
+}
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
