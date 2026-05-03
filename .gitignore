@@ -1,3 +1,28 @@
+# Dipendenze
 node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Produzione
+dist/
+
+# File di sistema (Mac e Windows)
 .DS_Store
-*/node_modules/
+Thumbs.db
+
+# Configurazioni locali
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
