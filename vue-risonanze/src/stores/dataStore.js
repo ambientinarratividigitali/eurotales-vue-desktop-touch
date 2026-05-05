@@ -249,6 +249,10 @@ export const useDataStore = defineStore('data', () => {
   function luogoFromId(id, locale) {
     const l = luogoById.value[id]
     if (!l) return null
+
+    if ((l.nome == 'Unknown' || l.nome == 'unknown') && locale == 'it'){
+      return { nome:  "Sconosciuto"}
+    }
     return {
       nome:  pick(l, 'nome',  'nome_citta_originale',  locale),
       stato: pick(l, 'stato', 'nome_stato_originale',  locale),

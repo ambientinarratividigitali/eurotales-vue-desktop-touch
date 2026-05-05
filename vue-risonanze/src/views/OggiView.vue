@@ -269,7 +269,8 @@ const mapActiveOggi = computed(() => {
   background-image: url('/img/mappaStoricaBiancoNero.png'); 
   background-size: cover; 
   background-position: center; 
-  background-blend-mode: overlay; 
+  background-blend-mode: overlay;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .side-info {

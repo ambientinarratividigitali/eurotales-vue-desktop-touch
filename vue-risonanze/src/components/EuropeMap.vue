@@ -2,7 +2,7 @@
   <div class="map-container">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="60 160 800 580"
+      viewBox="60 170 800 580"
       class="europe-svg"
     >
       <path
@@ -17,13 +17,14 @@
         @mouseleave="hovered = null"
       />
       <!-- Tooltip -->
-      <text
-        v-if="hovered"
-        x="650"
-        y="50"
-        class="country-label"
-        text-anchor="middle"
-      >{{ countryName(hovered) }}</text>
+      <text 
+        v-if="hovered && inDictionary(hovered)" 
+        x="80" 
+        y="700" 
+        class="country-label" 
+        text-anchor="start">
+        {{ countryName(hovered) }} {{ hasData(hovered) ? '(' + activeCountries[hovered] + ')' : '' }}
+      </text>
     </svg>
   </div>
 </template>
@@ -112,7 +113,7 @@ function handleClick(country) {
   cursor: pointer;
 }
 .country-path.clickable:hover {
-  filter: brightness(1.3);
+  filter: brightness(3.0);
 }
 .country-path.selected {
   stroke: white;
