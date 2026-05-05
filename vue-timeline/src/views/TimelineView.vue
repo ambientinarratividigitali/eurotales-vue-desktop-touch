@@ -3,11 +3,12 @@
     <!-- Sfondo decorativo -->
     <div class="bg-static" aria-hidden="true"></div>
 
-    <!-- Header: logo + titolo + bottone filtro + lang switcher -->
+    <!-- Header: logo + istruzione + legenda lingue -->
     <PageHeader
-      :show-filter="store.loaded"
-      @open-filters="showFilters = true"
+      v-if="store.loaded"
+      :languages="selectedLanguageObjs"
     />
+    <PageHeader v-else />
 
     <!-- Stage centrale: timeline + overlay (loading/errore) -->
     <div class="timeline-stage">
@@ -36,22 +37,23 @@
       />
     </div>
 
-    <!-- Footer: legenda + istruzione + zoom -->
+    <!-- Footer: zoom + categorie + filtro lingue + lang switcher -->
     <PageFooter
       v-if="store.loaded"
-      :languages="selectedLanguageObjs"
+      :show-filter="true"
+      v-model:selectedCategories="selectedCategoryIds"
       @zoom-in="zoomIn"
       @zoom-out="zoomOut"
+      @open-filters="showFilters = true"
     />
 
     <!-- Popup info evento -->
     <InfoPopup :event="selectedEvent" @close="selectedEvent = null" />
 
-    <!-- Popup filtri -->
+    <!-- Popup filtri (solo lingue) -->
     <FiltersPopup
       :open="showFilters"
       v-model:selectedLanguages="selectedLanguageIds"
-      v-model:selectedCategories="selectedCategoryIds"
       :max-languages="MAX_LANGUAGES"
       :min-languages="MIN_LANGUAGES"
       @close="showFilters = false"

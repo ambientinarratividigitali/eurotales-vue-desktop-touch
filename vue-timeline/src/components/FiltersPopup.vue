@@ -8,39 +8,25 @@
             <button class="close-btn" @click="$emit('close')">×</button>
           </header>
 
-          <!-- Lingue raggruppate per area linguistica -->
+          <!-- Lingue raggruppate per area linguistica, 2–3 colonne -->
           <div class="filter-section thin-scroll">
-            <h3 class="section-title">{{ t('fields.language') }}</h3>
-            <div class="languages-grid">
+            <div class="languages-columns">
               <div v-for="group in linguageGroups" :key="group.area" class="language-group">
                 <p class="group-area">{{ group.area }}</p>
-                <button
-                  v-for="lang in group.items"
-                  :key="lang.id"
-                  class="lang-item"
-                  :class="{ selected: isSelected(lang) }"
-                  :disabled="!isSelected(lang) && atMax"
-                  @click="toggleLanguage(lang)"
-                >
-                  <span class="lang-color" :style="{ background: lang.colore_TL }"></span>
-                  <span class="lang-name">{{ getName(lang) }}</span>
-                </button>
+                <div class="group-items">
+                  <button
+                    v-for="lang in group.items"
+                    :key="lang.id"
+                    class="lang-item"
+                    :class="{ selected: isSelected(lang) }"
+                    :disabled="!isSelected(lang) && atMax"
+                    @click="toggleLanguage(lang)"
+                  >
+                    <span class="lang-color" :style="{ background: lang.colore_TL }"></span>
+                    <span class="lang-name">{{ getName(lang) }}</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Categorie -->
-          <div class="filter-section">
-            <h3 class="section-title">{{ t('ui.selectCategory') }}</h3>
-            <div class="categories-grid">
-              <label v-for="cat in categories" :key="cat.id" class="cat-checkbox">
-                <input
-                  type="checkbox"
-                  :checked="selectedCategories.includes(cat.id)"
-                  @change="toggleCategory(cat.id)"
-                />
-                <span>{{ getCatName(cat) }}</span>
-              </label>
             </div>
           </div>
 
@@ -60,35 +46,26 @@ import { useDataStore } from '../stores/dataStore.js'
 
 const props = defineProps({
   open: Boolean,
-  selectedLanguages: { type: Array, required: true },  // array di id
-  selectedCategories: { type: Array, required: true }, // array di id
+  selectedLanguages: { type: Array, required: true },
   maxLanguages: { type: Number, default: 5 },
   minLanguages: { type: Number, default: 1 },
 })
 const emit = defineEmits([
   'close', 'apply',
-  'update:selectedLanguages', 'update:selectedCategories',
+  'update:selectedLanguages',
 ])
 
 const { t, locale } = useI18n()
 const store = useDataStore()
 
-function getName(lang)    { return store.linguaName(lang, locale.value) }
-function getCatName(cat)  { return store.categoriaName(cat, locale.value) }
+function getName(lang) { return store.linguaName(lang, locale.value) }
 
-const categories = computed(() =>
-  [...store.categorie].sort((a, b) => (a.id || 0) - (b.id || 0))
-)
-
-/** Estrae l'ordine numerico da "01.01 Neoatina" → 01.01 */
 function areaOrder(area) {
   const m = (area || '').match(/^(\d+(\.\d+)?)/)
   return m ? parseFloat(m[1]) : 999
 }
 
-/** Lingue raggruppate per Area_linguistica e ordinate. */
 const linguageGroups = computed(() => {
-  // Filtra solo lingue effettivamente presenti nei dati
   const usedLangIds = new Set(store.milestonesRaw.map(m => m.lingua))
   const availableLangs = store.lingue.filter(l => usedLangIds.has(l.id))
 
@@ -102,7 +79,7 @@ const linguageGroups = computed(() => {
   return Object.entries(groups)
     .sort((a, b) => areaOrder(a[0]) - areaOrder(b[0]))
     .map(([area, items]) => ({
-      area: area.replace(/^\d+(\.\d+)?\s*/, ''), // rimuovi prefisso ordinale
+      area: area.replace(/^\d+(\.\d+)?\s*/, ''),
       items: items.sort((x, y) => getName(x).localeCompare(getName(y))),
     }))
 })
@@ -125,14 +102,6 @@ function toggleLanguage(lang) {
   }
   emit('update:selectedLanguages', list)
 }
-
-function toggleCategory(id) {
-  const list = [...props.selectedCategories]
-  const idx = list.indexOf(id)
-  if (idx >= 0) list.splice(idx, 1)
-  else list.push(id)
-  emit('update:selectedCategories', list)
-}
 </script>
 
 <style scoped>
@@ -152,12 +121,12 @@ function toggleCategory(id) {
   background: #1c1814;
   border: 1px solid var(--w-12);
   border-radius: var(--radius-lg);
-  width: min(1200px, 95vw);
+  width: min(1400px, 95vw);
   max-height: 90vh;
   padding: var(--sp-5);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
   overflow: hidden;
 }
 
@@ -165,6 +134,7 @@ function toggleCategory(id) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .close-btn {
@@ -181,169 +151,132 @@ function toggleCategory(id) {
 .close-btn:hover  { background: var(--w-22); }
 .close-btn:active { transform: scale(0.95); }
 
+/* ── Sezione scrollabile ─────────────────────────────────── */
 .filter-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
+  flex: 1;
   min-height: 0;
-}
-.filter-section:first-of-type {
-  flex: 2;
   overflow-y: auto;
-  padding-right: var(--sp-1);
+  padding-right: var(--sp-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--w-22) transparent;
 }
-.filter-section:nth-of-type(2) {
-  flex: 0 0 auto;
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-md);
-  color: var(--oro);
-  font-weight: 600;
+.filter-section::-webkit-scrollbar { width: 8px; }
+.filter-section::-webkit-scrollbar-thumb {
+  background: var(--w-22);
+  border-radius: 4px;
 }
 
-/* ── Lingue ────────────────────────────────────────────── */
-.languages-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
+/* ── Layout a colonne (2 di default, 3 su wide) ──────────── */
+.languages-columns {
+  columns: 2;
+  column-gap: var(--sp-5);
+  column-rule: 1px solid var(--w-08);
 }
 
+@media (min-width: 1200px) {
+  .languages-columns { columns: 3; }
+}
+
+@media (min-width: 2560px) {
+  .languages-columns { columns: 3; column-gap: var(--sp-6); }
+}
+
+/* ── Gruppo per area ─────────────────────────────────────── */
 .language-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-1);
-  align-items: center;
+  break-inside: avoid;
+  margin-bottom: var(--sp-4);
 }
 
 .group-area {
-  width: 100%;
-  font-size: var(--fs-sm);
-  color: var(--w-65);
-  letter-spacing: 0.05em;
+  font-size: var(--fs-xs);
+  color: var(--w-45);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: var(--sp-1);
+  font-weight: 700;
+  margin-bottom: var(--sp-2);
+  padding-bottom: var(--sp-1);
+  border-bottom: 1px solid var(--w-08);
+}
+
+/* ── Items lingue dentro gruppo ──────────────────────────── */
+.group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
 }
 
 .lang-item {
   display: flex;
   align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radius-pill);
-  background: var(--w-05);
-  border: 1px solid var(--w-12);
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
   color: var(--w-65);
   font-size: var(--fs-sm);
+  font-family: var(--font-body);
   cursor: pointer;
   transition: all var(--tr-base);
-  min-height: 48px;
+  min-height: clamp(44px, 3.5vw, 64px);
   touch-action: manipulation;
+  width: 100%;
+  text-align: left;
 }
-.lang-item:hover:not(:disabled) { background: var(--w-12); color: white; }
-.lang-item:active:not(:disabled) { transform: scale(0.97); }
+
+.lang-item:hover:not(:disabled) {
+  background: var(--w-08);
+  color: white;
+  border-color: var(--w-12);
+}
+
+.lang-item:active:not(:disabled) { transform: scale(0.98); }
 
 .lang-item.selected {
-  background: var(--w-12);
-  border-color: var(--w-45);
+  background: var(--w-08);
+  border-color: var(--w-30);
   color: white;
   font-weight: 600;
 }
 
-.lang-item:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
+/* Colore a sinistra più grande se selezionato */
 .lang-color {
   width: clamp(14px, 1.2vw, 20px);
   height: clamp(14px, 1.2vw, 20px);
   border-radius: 50%;
   flex-shrink: 0;
+  transition: all var(--tr-fast);
+  box-shadow: 0 0 0 0px transparent;
 }
+
 .lang-item.selected .lang-color {
   width: clamp(18px, 1.5vw, 26px);
   height: clamp(18px, 1.5vw, 26px);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
 }
 
-/* ── Categorie con custom checkbox grande e touch-friendly ── */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--sp-2);
+.lang-item:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
 }
 
-.cat-checkbox {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--radius-md);
-  background: var(--w-05);
-  cursor: pointer;
-  font-size: var(--fs-base);
-  color: var(--w-85);
-  transition: background var(--tr-base);
-  min-height: 56px;
-  touch-action: manipulation;
-}
-.cat-checkbox:hover  { background: var(--w-08); }
-.cat-checkbox:active { transform: scale(0.98); }
-
-/* Custom checkbox visivamente grande */
-.cat-checkbox input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: clamp(24px, 2vw, 36px);
-  height: clamp(24px, 2vw, 36px);
-  border: 2px solid var(--w-45);
-  border-radius: 6px;
-  background: transparent;
-  cursor: pointer;
-  position: relative;
+/* ── Bottone chiudi in basso ─────────────────────────────── */
+.btn.btn-oro {
   flex-shrink: 0;
-  transition: all var(--tr-fast);
-}
-
-.cat-checkbox input[type="checkbox"]:checked {
-  background: var(--oro);
-  border-color: var(--oro);
-}
-
-/* Spunta */
-.cat-checkbox input[type="checkbox"]:checked::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  width: 30%;
-  height: 60%;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-}
-
-/* ── Scrollbar fine ──────────────────────────────────────── */
-.filter-section:first-of-type {
-  scrollbar-width: thin;
-  scrollbar-color: var(--w-22) transparent;
-}
-.filter-section:first-of-type::-webkit-scrollbar { width: 8px; }
-.filter-section:first-of-type::-webkit-scrollbar-thumb {
-  background: var(--w-22);
-  border-radius: 4px;
+  align-self: flex-end;
+  min-height: clamp(48px, 4vw, 72px);
+  padding: var(--sp-2) var(--sp-5);
+  font-size: var(--fs-base);
 }
 
 @media (hover: none) {
-  .lang-item:hover, .cat-checkbox:hover, .close-btn:hover {
-    background: inherit;
-  }
+  .lang-item:hover { background: transparent; border-color: transparent; color: var(--w-65); }
+  .close-btn:hover { background: var(--w-08); }
 }
 
 @media (min-width: 2560px) {
-  .lang-item    { min-height: 64px; }
-  .cat-checkbox { min-height: 72px; }
-  .close-btn    { width: 72px; height: 72px; font-size: 40px; }
+  .lang-item  { min-height: 72px; font-size: var(--fs-base); }
+  .close-btn  { width: 80px; height: 80px; font-size: 44px; }
+  .filter-section::-webkit-scrollbar { width: 14px; }
 }
 </style>

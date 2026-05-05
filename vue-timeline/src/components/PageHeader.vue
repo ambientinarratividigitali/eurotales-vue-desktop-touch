@@ -5,38 +5,41 @@
            class="logo" alt="Eurotales" />
     </a>
 
+    <!-- Titolo app -->
     <h1 class="title">{{ t('app.title') }}</h1>
 
-    <!-- Bottone filtro nell'header (azione primaria) -->
-    <button
-      v-if="showFilter"
-      class="header-btn header-btn-primary"
-      @click="$emit('open-filters')"
-    >
-      <span class="filter-icon" aria-hidden="true">⚙</span>
-      <span>{{ t('ui.filterLanguages') }}</span>
-    </button>
+    <!-- Istruzione centrale -->
+    <p class="instruction">{{ t('ui.instruction') }}</p>
 
-    <!-- Lang switcher -->
-    <div class="lang-switch">
-      <button
-        v-for="loc in ['it', 'en']"
-        :key="loc"
-        class="lang-btn"
-        :class="{ active: locale === loc }"
-        @click="locale = loc"
-      >{{ loc.toUpperCase() }}</button>
-    </div>
+    <!-- Legenda lingue selezionate -->
+    <aside class="legend" v-if="languages.length">
+      <span class="legend-label-prefix">{{ t('fields.language') }}:</span>
+      <div
+        v-for="lang in languages"
+        :key="lang.id"
+        class="legend-item"
+      >
+        <span class="legend-dot" :style="{ background: lang.colore_TL }"></span>
+        <span class="legend-label">{{ getName(lang) }}</span>
+      </div>
+    </aside>
   </header>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useDataStore } from '../stores/dataStore.js'
+
 const { t, locale } = useI18n()
+const store = useDataStore()
+
 defineProps({
-  showFilter: { type: Boolean, default: true },
+  languages: { type: Array, default: () => [] },
 })
-defineEmits(['open-filters'])
+
+function getName(lang) {
+  return store.linguaName(lang, locale.value)
+}
 </script>
 
 <style scoped>
@@ -62,48 +65,71 @@ defineEmits(['open-filters'])
   font-weight: 700;
   color: var(--rosso);
   letter-spacing: 0.05em;
-  flex: 1;
-}
-
-/* Bottone primario nell'header (filtra lingue) */
-.header-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-body);
-  font-size: var(--fs-base);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--tr-base);
   white-space: nowrap;
-  min-height: 48px;
-  touch-action: manipulation;
+  flex-shrink: 0;
 }
 
-.header-btn-primary {
-  background: var(--rosso);
-  color: white;
-  box-shadow: 0 2px 8px rgba(145, 43, 61, 0.3);
+/* Istruzione centrata */
+.instruction {
+  flex: 1;
+  font-size: var(--fs-sm);
+  color: var(--grigio-mid);
+  font-style: italic;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.header-btn-primary:hover { background: #6f1f2e; }
-.header-btn-primary:active { transform: scale(0.97); }
 
-.filter-icon {
-  font-size: 1.15em;
-  line-height: 1;
+/* Legenda */
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-3);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.legend-label-prefix {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--grigio-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  color: var(--grigio-dark);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.legend-dot {
+  width: clamp(14px, 1.2vw, 22px);
+  height: clamp(14px, 1.2vw, 22px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .instruction { display: none; }
 }
 
 @media (max-width: 768px) {
-  .title { font-size: var(--fs-lg); }
-  .header-btn span:last-child { display: none; }
-  .header-btn { padding: var(--sp-2); }
-  .filter-icon { font-size: 1.5em; }
+  .title { display: none; }
+  .legend-label-prefix { display: none; }
+  .legend-item .legend-label { display: none; }
 }
 
 @media (min-width: 2560px) {
-  .header-btn { min-height: 64px; padding: var(--sp-3) var(--sp-4); }
-  .lang-btn   { min-height: 56px; }
+  .legend-dot {
+    width: clamp(18px, 1.5vw, 28px);
+    height: clamp(18px, 1.5vw, 28px);
+  }
 }
 </style>
