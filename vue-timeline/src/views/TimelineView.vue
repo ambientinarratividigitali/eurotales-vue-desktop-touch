@@ -74,7 +74,7 @@ const { t, locale } = useI18n()
 const store = useDataStore()
 
 // ── Limiti per i filtri lingua ──────────────────────────────
-const MAX_LANGUAGES = 5
+const MAX_LANGUAGES = 5000
 const MIN_LANGUAGES = 1
 
 // ── Stato locale ────────────────────────────────────────────

@@ -113,7 +113,7 @@ export const useDataStore = defineStore('data', () => {
     error.value = null
     try {
       const [r1, r2, r3] = await Promise.all([
-        fetch(`${API}/items/timeline/?limit=-1&filter[stato][_eq]=3`).then(r => r.json()),
+        fetch(`${API}/items/timeline/?limit=-1&filter[stato][_eq]=3`).then(r => r.json()), // 1 = bzza, 2 = archiviato, 3 = pubblicato
         fetch(`${API}/items/timeline_lingua/?limit=-1`).then(r => r.json()),
         fetch(`${API}/items/timeline_categoria/?limit=-1`).then(r => r.json()),
       ])
@@ -123,6 +123,7 @@ export const useDataStore = defineStore('data', () => {
         lingue:     r2.data,
         categorie:  r3.data,
       }
+      console.log("DATI GREZZI DAL DB:", payload.milestones);
 
       milestonesRaw.value = payload.milestones
       lingue.value        = payload.lingue
@@ -159,6 +160,21 @@ export const useDataStore = defineStore('data', () => {
   /** Ritorna un evento "view-friendly" con tutti i campi già localizzati. */
   function localizedEvent(milestone, locale = 'it') {
     if (!milestone) return null
+    // console.log({
+    //   id: milestone.id,
+    //   anno: milestone.Anno,
+    //   validita: milestone.validita,
+    //   nome:        pick(milestone, 'nome',        'name',        locale),
+    //   descrizione: pick(milestone, 'descrizione', 'description', locale),
+    //   luogo:       pick(milestone, 'luogo',       'place',       locale),
+    //   didascalia:  pick(milestone, 'dida',        'caption',     locale),
+    //   immagine: milestone.immagine,
+    //   lingua:    linguaName(milestone.linguaObj, locale),
+    //   colore:    milestone.linguaObj?.colore_TL || '#888',
+    //   textColor: milestone.linguaObj?.Colore_testo === 1 ? 'white' : 'inherit',
+    //   categoria: categoriaName(milestone.categoriaObj, locale),
+    //   areaLinguistica: milestone.linguaObj?.Area_linguistica || '',
+    // })
     return {
       id: milestone.id,
       anno: milestone.Anno,
@@ -166,7 +182,7 @@ export const useDataStore = defineStore('data', () => {
       nome:        pick(milestone, 'nome',        'name',        locale),
       descrizione: pick(milestone, 'descrizione', 'description', locale),
       luogo:       pick(milestone, 'luogo',       'place',       locale),
-      didascalia:  pick(milestone, 'dida',        'caption',     locale),
+      didascalia:  pick(milestone, 'didascalia',        'caption',     locale),
       immagine: milestone.immagine,
       lingua:    linguaName(milestone.linguaObj, locale),
       colore:    milestone.linguaObj?.colore_TL || '#888',

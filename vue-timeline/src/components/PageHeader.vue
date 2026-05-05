@@ -17,7 +17,7 @@
       <span>{{ t('ui.filterLanguages') }}</span>
     </button>
 
-    <!-- Lang switcher: stesso pattern di Risonanze, in alto a destra -->
+    <!-- Lang switcher -->
     <div class="lang-switch">
       <button
         v-for="loc in ['it', 'en']"

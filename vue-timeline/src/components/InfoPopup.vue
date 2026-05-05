@@ -42,7 +42,7 @@
 
           <div v-if="imageUrl" class="info-media">
             <img :src="imageUrl" class="event-image" :alt="event.nome" />
-            <p v-if="event.didascalia" class="event-caption">{{ event.didascalia }}</p>
+            <div v-if="event.didascalia" class="event-caption" v-html="event.didascalia"></div>
           </div>
         </div>
       </div>
@@ -228,5 +228,15 @@ const categoryIcon = computed(() => {
   color: var(--grigio-mid);
   text-align: center;
   font-style: italic;
+  pointer-events: none; 
+  cursor: default; 
+  color: inherit !important;
+  text-decoration: none;
+}
+
+.event-caption :deep(a) {
+  color: inherit !important;
+  text-decoration: none !important;
+  pointer-events: none !important;
 }
 </style>
