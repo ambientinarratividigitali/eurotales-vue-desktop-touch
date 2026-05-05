@@ -2,7 +2,7 @@
   <div class="map-container">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="150 -20 1000 684"
+      viewBox="60 160 800 580"
       class="europe-svg"
     >
       <path

@@ -103,10 +103,15 @@ const showInfo = ref(false)
   position: relative;
   overflow: hidden;
   background: var(--nero-deep);
+  background-image: url('/img/mappaStorica.png'); 
+  background-size: cover; 
+  background-position: center; 
+  background-blend-mode: overlay; 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Sfondo animato */
-.home-bg { position: absolute; inset: 0; pointer-events: none; }
+.home-bg { position: absolute; inset: 0; pointer-events: none;}
 .bg-circle {
   position: absolute;
   border-radius: 50%;

@@ -385,6 +385,10 @@ function goBack() {
   z-index: var(--z-content);
   padding: 0 var(--sp-4) calc(var(--sp-6) + var(--sp-4));
   overflow: hidden;
+  background-image: url('/img/mappaStoricaBiancoNero.png'); 
+  background-size: cover; 
+  background-position: center; 
+  background-blend-mode: overlay; 
 }
 
 .side-info {
