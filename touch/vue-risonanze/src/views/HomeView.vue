@@ -140,22 +140,29 @@ const showInfo = ref(false)
   gap: var(--sp-1);
 }
 .lang-btn {
-  padding: var(--sp-1) var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius-pill);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   font-weight: 600;
   letter-spacing: 0.05em;
-  background: transparent;
-  border: 1px solid var(--w-30);
-  color: var(--w-45);
+  background: var(--b-50);
+  border: 1.5px solid var(--w-30);
+  color: var(--w-85);
   cursor: pointer;
+  backdrop-filter: blur(8px);
   transition: all var(--tr-base);
-  min-height: 36px;
+  min-height: 56px;
+  min-width: 64px;
 }
 .lang-btn.active {
-  background: var(--w-12);
+  background: var(--w-18);
   color: white;
-  border-color: var(--w-45);
+  border-color: white;
+}
+.lang-btn:hover:not(.active) { background: var(--w-12); color: white; }
+
+@media (min-width: 2560px) {
+  .lang-btn { min-height: 80px; min-width: 96px; }
 }
 
 /* Titolo */
@@ -164,22 +171,27 @@ const showInfo = ref(false)
   margin-bottom: var(--sp-6);
   position: relative;
   z-index: 1;
+  padding: var(--sp-3) var(--sp-5);
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(4px);
 }
 .home-title h1 {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
   font-weight: 600;
-  color: var(--w-85);
-
+  color: white;
   letter-spacing: 0.02em;
   line-height: 1;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
 }
 .home-title p {
   font-size: var(--fs-md);
-  color: var(--w-45);
-  margin-top: var(--sp-1);
-  letter-spacing: 0.15em;
+  color: var(--w-85);
+  margin-top: var(--sp-2);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 /* Cerchi */
@@ -214,18 +226,19 @@ const showInfo = ref(false)
 
 .circle-label {
   font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 56px);
+  font-size: clamp(28px, 3.2vw, 96px);
   font-weight: 600;
   letter-spacing: 0.05em;
   line-height: 1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .circle-desc {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   font-weight: 500;
-  opacity: 0.7;
+  opacity: 0.9;
   text-align: center;
-  max-width: 160px;
+  max-width: clamp(160px, 14vw, 320px);
   letter-spacing: 0.02em;
   line-height: 1.3;
 }
@@ -241,9 +254,9 @@ const showInfo = ref(false)
 
 /* IERI */
 .circle-ieri {
-  width: clamp(160px, 20vw, 360px);
-  height: clamp(160px, 20vw, 360px);
-  background: radial-gradient(circle at 40% 40%, rgba(145, 43, 61, 0.8), rgba(80, 20, 30, 0.95));
+  width: clamp(180px, 22vw, 640px);
+  height: clamp(180px, 22vw, 640px);
+  background: radial-gradient(circle at 40% 40%, rgba(145, 43, 61, 0.85), rgba(80, 20, 30, 0.95));
   color: white;
   box-shadow: 0 20px 60px rgba(145, 43, 61, 0.4);
 }
@@ -251,8 +264,8 @@ const showInfo = ref(false)
 
 /* INFO */
 .circle-info {
-  width: clamp(90px, 10vw, 200px);
-  height: clamp(90px, 10vw, 200px);
+  width: clamp(110px, 11vw, 320px);
+  height: clamp(110px, 11vw, 320px);
   background: radial-gradient(circle at 40% 40%, rgba(80, 75, 65, 0.9), rgba(40, 38, 35, 0.95));
   color: var(--w-85);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -261,9 +274,9 @@ const showInfo = ref(false)
 
 /* OGGI */
 .circle-oggi {
-  width: clamp(160px, 20vw, 360px);
-  height: clamp(160px, 20vw, 360px);
-  background: radial-gradient(circle at 40% 40%, rgba(43, 145, 127, 0.8), rgba(20, 80, 70, 0.95));
+  width: clamp(180px, 22vw, 640px);
+  height: clamp(180px, 22vw, 640px);
+  background: radial-gradient(circle at 40% 40%, rgba(43, 145, 127, 0.85), rgba(20, 80, 70, 0.95));
   color: white;
   box-shadow: 0 20px 60px rgba(43, 145, 127, 0.4);
 }
@@ -274,20 +287,22 @@ const showInfo = ref(false)
 .modal-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--sp-4);
+  gap: var(--sp-5);
   margin: var(--sp-3) 0;
   text-align: left;
 }
 .modal-col p {
   font-size: var(--fs-base);
   line-height: 1.7;
-  color: var(--w-65);
+  color: var(--w-85);
 }
 .col-ieri,
 .col-oggi {
   font-family: var(--font-display);
-  font-size: var(--fs-md);
-  margin-bottom: var(--sp-1);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  margin-bottom: var(--sp-2);
+  letter-spacing: 0.04em;
 }
 .col-ieri { color: var(--rosso); }
 .col-oggi { color: var(--verde); }

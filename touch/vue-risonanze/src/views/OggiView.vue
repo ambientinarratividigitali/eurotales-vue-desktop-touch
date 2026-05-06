@@ -212,6 +212,11 @@ function onLeftClick(el, chart) {
     selectedLang.value = label
     step.value = 'parents'
     rightKey.value++
+  } else if (step.value === 'parents') {
+    // Già nello step "parents": cambia lingua selezionata e aggiorna
+    // il chart di destra senza tornare indietro.
+    selectedLang.value = label
+    rightKey.value++
   }
 }
 
@@ -266,29 +271,37 @@ const mapActiveOggi = computed(() => {
   position: relative;
   z-index: var(--z-content);
   padding: 0 var(--sp-4) calc(var(--sp-6) + var(--sp-4));
+  gap: var(--sp-3);
   overflow: hidden;
-  background-image: url('/img/mappaStoricaBiancoNero.png'); 
-  background-size: cover; 
-  background-position: center; 
+  background-image: url('/img/mappaStoricaBiancoNero.png');
+  background-size: cover;
+  background-position: center;
   background-blend-mode: overlay;
   background-color: rgba(0, 0, 0, 0);
 }
 
 .side-info {
   grid-column: 1 / -1;
-  padding: var(--sp-1) 0 var(--sp-2);
-  font-size: var(--fs-base);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-md);
+  line-height: 1.5;
   color: var(--w-85);
   font-weight: 500;
+  text-align: center;
+  background: rgba(8, 14, 14, 0.55);
+  border: 1px solid var(--w-12);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(6px);
 }
-.side-info :deep(b) { color: rgb(68, 24, 24); }
+.side-info :deep(b) { color: var(--oro); font-weight: 700; }
 
 .left-panel,
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
+  gap: var(--sp-2);
   overflow: hidden;
+  min-height: 0;
 }
 
 .chart-box,
@@ -298,5 +311,10 @@ const mapActiveOggi = computed(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  min-height: 0;
+}
+
+@media (min-width: 2560px) {
+  .oggi-main { gap: var(--sp-4); }
 }
 </style>

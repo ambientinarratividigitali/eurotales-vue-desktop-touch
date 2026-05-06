@@ -20,16 +20,7 @@ function isActive(name) { return route.name === name }
     <div class="hdr-inner">
       <h1 class="hdr-title">{{ t('app.title') }}</h1>
 
-      <nav class="hdr-nav" aria-label="primary">
-        <button :class="['nav-btn', { active: isActive('gallery') }]"
-                @click="router.push({ name: 'gallery' })">
-          {{ t('nav.gallery') }}
-        </button>
-        <button :class="['nav-btn', { active: isActive('mappa') }]"
-                @click="router.push({ name: 'mappa' })">
-          {{ t('nav.map') }}
-        </button>
-      </nav>
+      
 
       <div class="lang-switch" role="group" aria-label="language">
         <button :class="['lang-btn', { active: locale === 'it' }]" @click="setLocale('it')">IT</button>

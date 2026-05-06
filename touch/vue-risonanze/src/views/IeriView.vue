@@ -23,19 +23,32 @@
         <p v-html="sideContent"></p>
       </div>
 
-      <!-- Sinistra: donut chart -->
+      <!-- Sinistra: donut chart, OPPURE lista personaggi se siamo su list-map -->
       <section class="left-panel">
         <div class="panel-label">{{ descChartA }}</div>
-        <div class="chart-box">
+
+        <!-- Donut chart: visibile in tutti gli step tranne list-map -->
+        <div class="chart-box" v-if="step !== 'list-map'">
           <DonutChart :data="chartData" :onClick="onChartClick" :key="chartKey" />
+        </div>
+
+        <!-- Lista personaggi della nazione cliccata: prende il posto del donut -->
+        <div class="names-list thin-scroll" v-else>
+          <div
+            v-for="p in filteredList"
+            :key="p.id"
+            class="name-item"
+            :style="{ borderColor: getAreaColor(p) }"
+            @click="selectPersona(p)"
+          >{{ getDisplayTitolo(p) }}</div>
         </div>
       </section>
 
-      <!-- Destra: mappa o lista personaggi -->
+      <!-- Destra: mappa, OPPURE lista personaggi quando si è su list-chart -->
       <section class="right-panel">
         <div class="panel-label">{{ descChartB }}</div>
 
-        <div class="map-box" v-if="step === 'area' || step === 'lingua'">
+        <div class="map-box" v-if="step === 'area' || step === 'lingua' || step === 'list-map'">
           <EuropeMap
             domain="ieri"
             :activeCountries="mapActive"
@@ -44,7 +57,7 @@
           />
         </div>
 
-        <div class="names-list thin-scroll" v-if="step === 'list-chart' || step === 'list-map'">
+        <div class="names-list thin-scroll" v-if="step === 'list-chart'">
           <div
             v-for="p in filteredList"
             :key="p.id"
@@ -175,7 +188,9 @@ function refreshTexts() {
   }
   if (step.value === 'list-map' && selectedMapCountry.value) {
     const nation = nationName(selectedMapCountry.value, locale.value)
-    descChartB.value = t('ieri.descBornIn', { nation: nation.toUpperCase() })
+    // Lista personaggi a sinistra, mappa a destra: i descrittori si invertono.
+    descChartA.value = t('ieri.descBornIn', { nation: nation.toUpperCase() })
+    descChartB.value = t('ieri.nationLabel')
     sideContent.value = t('ieri.nationSelected', {
       count: currentList.value.length,
       nation: nation.toUpperCase(),
@@ -399,29 +414,37 @@ function goBack() {
   position: relative;
   z-index: var(--z-content);
   padding: 0 var(--sp-4) calc(var(--sp-6) + var(--sp-4));
+  gap: var(--sp-3);
   overflow: hidden;
-  background-image: url('/img/mappaStoricaBiancoNero.png'); 
-  background-size: cover; 
-  background-position: center; 
+  background-image: url('/img/mappaStoricaBiancoNero.png');
+  background-size: cover;
+  background-position: center;
   background-blend-mode: overlay;
   background-color: rgba(0, 0, 0, 0);
 }
 
 .side-info {
   grid-column: 1 / -1;
-  padding: var(--sp-1) 0 var(--sp-2);
-  font-size: var(--fs-base);
+  padding: var(--sp-2) 50% var(--sp-2) var(--sp-3);
+  font-size: var(--fs-md);
+  line-height: 1.5;
   color: var(--w-85);
   font-weight: 500;
+  text-align: center;       /* invariato: centra il testo dentro lo spazio "utile" */
+  background: rgba(20, 16, 12, 0.55);
+  border: 1px solid var(--w-12);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(6px);
 }
-.side-info :deep(b) { color: var(--w-85); }
+.side-info :deep(b) { color: var(--oro); font-weight: 700; }
 
 .left-panel,
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
+  gap: var(--sp-2);
   overflow: hidden;
+  min-height: 0;
 }
 
 .chart-box,
@@ -431,6 +454,7 @@ function goBack() {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  min-height: 0;
 }
 
 .names-list {
@@ -440,25 +464,32 @@ function goBack() {
   flex-wrap: wrap;
   align-content: flex-start;
   gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-1);
+  padding: var(--sp-3) var(--sp-2);
 }
 
 .name-item {
   border: 3px solid #888;
   border-radius: var(--radius-pill);
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
   font-size: var(--fs-base);
   font-weight: 600;
-  background: rgba(128,128,128,0.2);
+  background: rgba(20, 16, 12, 0.6);
   cursor: pointer;
   transition: background var(--tr-base), transform var(--tr-base);
   text-align: center;
-  min-height: 44px;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
   color: var(--w-85);
-
 }
-.name-item:hover {
-  background: var(--w-12);
-  transform: scale(1.02);
+.name-item:hover,
+.name-item:active {
+  background: rgba(20, 16, 12, 0.85);
+  transform: scale(1.03);
+}
+
+@media (min-width: 2560px) {
+  .name-item { min-height: 80px; padding: var(--sp-3) var(--sp-5); }
+  .ieri-main { gap: var(--sp-4); }
 }
 </style>

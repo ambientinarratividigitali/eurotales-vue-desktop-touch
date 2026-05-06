@@ -68,24 +68,26 @@ defineEmits(['back'])
   z-index: var(--z-fixed);
   display: flex;
   align-items: center;
-  gap: var(--sp-1);
-  background: var(--b-50);
-  border: 1.5px solid var(--w-22);
+  gap: var(--sp-2);
+  background: var(--b-65);
+  border: 1.5px solid var(--w-30);
   color: white;
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
   font-size: var(--fs-base);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   backdrop-filter: blur(8px);
-  transition: background var(--tr-base), border-color var(--tr-base);
-  min-height: 44px;
+  transition: background var(--tr-base), border-color var(--tr-base), transform var(--tr-fast);
+  min-height: 64px;
 }
-.fixed-back-btn:hover {
+.fixed-back-btn:hover,
+.fixed-back-btn:active {
   background: var(--w-12);
-  border-color: var(--w-45);
+  border-color: white;
 }
+.fixed-back-btn:active { transform: scale(0.97); }
 
 .fixed-lang-switch {
   position: fixed;
@@ -93,28 +95,38 @@ defineEmits(['back'])
   right: var(--sp-4);
   z-index: var(--z-fixed);
   display: flex;
-  gap: var(--sp-1);
+  gap: var(--sp-2);
 }
 
 .lang-btn {
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius-pill);
   font-size: var(--fs-base);
   font-weight: 600;
   letter-spacing: 0.06em;
-  background: var(--b-50);
-  border: 1.5px solid var(--w-22);
-  color: var(--w-45);
+  background: var(--b-65);
+  border: 1.5px solid var(--w-30);
+  color: var(--w-85);
   cursor: pointer;
   backdrop-filter: blur(8px);
   transition: all var(--tr-base);
-  min-height: 44px;
-  min-width: 56px;
+  min-height: 64px;
+  min-width: 72px;
 }
 .lang-btn.active {
+  background: var(--w-18);
+  color: white;
+  border-color: white;
+}
+.lang-btn:hover:not(.active),
+.lang-btn:active:not(.active) {
   background: var(--w-12);
   color: white;
-  border-color: var(--w-45);
 }
-.lang-btn:hover { background: var(--w-12); color: white; }
+
+@media (min-width: 2560px) {
+  .fixed-back-btn,
+  .lang-btn { min-height: 80px; }
+  .lang-btn { min-width: 96px; }
+}
 </style>

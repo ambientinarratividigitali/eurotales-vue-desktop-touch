@@ -384,11 +384,7 @@ function toggleInscription(id) { openInscriptions.value[id] = !openInscriptions.
             </tbody>
           </table>
 
-          <!-- MAPPA + indirizzo -->
-          <template v-if="luogo?.mappa?.type === 'Point'">
-            <div ref="mapEl" class="scheda-map"></div>
-            <p v-if="fullAddress" class="address-line">{{ fullAddress }}</p>
-          </template>
+          
         </aside>
       </div>
     </template>
