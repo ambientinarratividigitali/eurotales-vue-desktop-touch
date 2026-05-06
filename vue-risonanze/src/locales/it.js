@@ -31,7 +31,7 @@ export default {
     tabLingue: 'Tabella delle LINGUE →',
     cerca: 'Cerca una persona',
     everyColor: 'Ogni colore corrisponde all\'area in cui sono collocate le',
-    clickToDiscover: 'Clicca per scoprire le lingue che risuonano in ciascuna.',
+    clickToDiscover: '<br>Clicca per scoprire le lingue che risuonano in ciascuna.',
     areaSelected: 'Stai visualizzando un totale di {count} lingue dell\'area: {area}',
     languageSelected: 'Stai visualizzando {count} personaggi con lingua madre: {language}',
     nationSelected: 'Stai visualizzando {count} personaggi nati in: {nation}',

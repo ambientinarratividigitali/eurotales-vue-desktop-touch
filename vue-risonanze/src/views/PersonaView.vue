@@ -222,7 +222,7 @@ const ringColors = computed(() =>
 
 const ringIframeUrl = computed(() => {
   const encoded = encodeURIComponent(JSON.stringify(ringColors.value))
-  return `/rings.html?c=${encoded}&t=${Date.now()}`
+  return `${import.meta.env.BASE_URL}rings.html?c=${encoded}&t=${Date.now()}`
 })
 
 onMounted(() => {

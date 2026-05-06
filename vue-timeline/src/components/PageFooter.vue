@@ -17,16 +17,25 @@
 
     <!-- Categorie come bottoni pill toggle (centro) -->
     <div class="categories-bar">
-  <button
-    v-for="cat in categories"
-    :key="cat.id"
-    class="cat-btn"
-    :class="{ active: selectedCategories.includes(cat.id) }"
-    @click="toggleCategory(cat.id)"
-  >
-    {{ getCatName(cat) }}
-  </button>
-</div>
+      <div class="cat-row">
+        <button
+          v-for="cat in categoriesRow1"
+          :key="cat.id"
+          class="cat-btn"
+          :class="{ active: selectedCategories.includes(cat.id) }"
+          @click="toggleCategory(cat.id)"
+        >{{ getCatName(cat) }}</button>
+      </div>
+      <div class="cat-row">
+        <button
+          v-for="cat in categoriesRow2"
+          :key="cat.id"
+          class="cat-btn"
+          :class="{ active: selectedCategories.includes(cat.id) }"
+          @click="toggleCategory(cat.id)"
+        >{{ getCatName(cat) }}</button>
+      </div>
+    </div>
 
     <!-- Destra: filtro lingue + lang switcher -->
     <div class="footer-actions">
@@ -76,6 +85,9 @@ function getCatName(cat) { return store.categoriaName(cat, locale.value) }
 const categories = computed(() =>
   [...store.categorie].sort((a, b) => (a.id || 0) - (b.id || 0))
 )
+
+const categoriesRow1 = computed(() => categories.value.slice(0, 4))
+const categoriesRow2 = computed(() => categories.value.slice(4))
 
 function toggleCategory(id) {
   const list = [...props.selectedCategories]
@@ -135,46 +147,53 @@ function toggleCategory(id) {
 .categories-bar {
   flex: 1 1 0;
   min-width: 0;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-auto-flow: column;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
   padding: var(--sp-1) 0;
 }
 
+.cat-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+}
 
+/* ── Category buttons — stile distinto: tag/chip quadrato ── */
 .cat-btn {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45em 1.1em;
-  border-radius: var(--radius-pill);
-  border: 2px solid rgba(0,0,0,0.15);
-  background: transparent;
+  min-height: 44px;
+  padding: 0.5em 1.1em;
+  border-radius: 6px;
+  border: 1.5px solid rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.6);
   color: var(--grigio-mid);
   font-family: var(--font-body);
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
   transition: all var(--tr-base);
   touch-action: manipulation;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 .cat-btn:hover {
   border-color: var(--rosso);
   color: var(--rosso);
-  background: rgba(145, 43, 61, 0.06);
+  background: rgba(145, 43, 61, 0.05);
 }
 .cat-btn:active { transform: scale(0.96); }
 .cat-btn.active {
   background: var(--rosso);
   border-color: var(--rosso);
   color: white;
-  box-shadow: 0 2px 6px rgba(145, 43, 61, 0.28);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(145, 43, 61, 0.25);
 }
 .cat-btn.active:hover {
   background: var(--rosso-dark);
@@ -231,7 +250,7 @@ function toggleCategory(id) {
 
 @media (hover: none) {
   .zoom-btn:hover       { background: var(--rosso); }
-  .cat-btn:hover        { background: transparent; border-color: rgba(0,0,0,0.15); color: var(--grigio-mid); }
+  .cat-btn:hover        { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.18); color: var(--grigio-mid); }
   .cat-btn.active:hover { background: var(--rosso); border-color: var(--rosso); color: white; }
   .filter-btn:hover     { background: var(--rosso); border-color: var(--rosso); }
 }
