@@ -1,0 +1,116 @@
+<script setup>
+/* TagView — tracce filtrate per id tag (route :id).
+   Fetch puntuale: solo le tracce con questo tag, no scarico pivot completa. */
+import { ref, computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useDataStore, pick } from '../stores/dataStore.js'
+import TracciaCard from '../components/TracciaCard.vue'
+
+const props = defineProps({ id: { type: [String, Number], required: true } })
+const { t, locale } = useI18n()
+const store = useDataStore()
+
+const tagId = computed(() => parseInt(props.id, 10))
+
+const tracceList = ref([])
+const nazioniMap = ref({})
+const loading    = ref(false)
+
+const tagObj = computed(() => {
+  if (!store.tags) return null
+  return store.tags.find(tg => tg.id === tagId.value) || null
+})
+
+const tagLabel = computed(() => {
+  if (!tagObj.value) return t('tag.tagNotFound')
+  return pick(tagObj.value, 'tag', 'tag_inglese', locale.value)
+})
+
+async function load() {
+  loading.value = true
+  try {
+    await store.ensureTags()
+    const { tracce, nazioni } = await store.fetchTracceByTag(tagId.value)
+    tracceList.value = tracce
+    nazioniMap.value = nazioni
+  } catch (e) {
+    console.error('[TagView] load failed', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+function getNazione(item) {
+  const nid = item.luogo?.nazione
+  return nazioniMap.value[nid] || null
+}
+
+onMounted(load)
+watch(tagId, load)
+</script>
+
+<template>
+  <div class="tag-view">
+    <h1 class="tag-title">{{ tagLabel }}</h1>
+
+    <div class="back-link">
+      <router-link :to="{ name: 'gallery' }" class="back-btn">
+        {{ t('app.backToTraces') }}
+      </router-link>
+    </div>
+
+    <div v-if="loading" class="loader"></div>
+
+    <div v-else-if="tracceList.length === 0" class="empty-msg">
+      {{ t('app.notFound') }}
+    </div>
+
+    <div v-else class="items-grid">
+      <TracciaCard v-for="item in tracceList" :key="item.id"
+                   :item="item"
+                   :luogo="item.luogo"
+                   :nazione="getNazione(item)"
+                   :showCentury="false" />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.tag-view { padding: var(--sp-5); }
+.tag-title {
+  text-align: center;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  margin-top: var(--sp-4);
+  color: var(--text);
+}
+.back-link {
+  display: flex;
+  justify-content: center;
+  margin: var(--sp-4) 0;
+}
+.back-btn {
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+  min-height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+}
+.back-btn:hover { color: var(--accent-strong); }
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(240px, 20vw, 360px), 1fr));
+  gap: var(--sp-5);
+  padding: var(--sp-4);
+}
+.empty-msg {
+  text-align: center;
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+  margin-top: var(--sp-7);
+}
+</style>

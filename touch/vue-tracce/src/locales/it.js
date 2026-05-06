@@ -1,0 +1,56 @@
+export default {
+  app: {
+    title: 'Tracce',
+    backToTraces: 'Tutte le tracce',
+    backToTracesBig: 'Torna alle tracce',
+    loading: 'Caricamento…',
+    notFound: 'Nessun risultato',
+  },
+  gallery: {
+    allTypologies:    'Tutte le tipologie',
+    sortByCentury:    '📜 Ordina per secolo',
+    searchPlaceholder:'Scrivi qui la tua ricerca...',
+    unknownCity:      'Città sconosciuta',
+  },
+  scheda: {
+    inscription:      'Iscrizione',
+    italianTrans:     'Traduzione italiana',
+    englishTrans:     'Traduzione inglese',
+    description:      'Descrizione',
+    bibliography:     'Bibliografia',
+    deepening:        'APPROFONDIMENTO',
+    closeDeepening:   'CHIUDI APPROFONDIMENTO',
+    location:         'Luogo',
+    date:             'Data',
+    typology:         'Tipologia',
+    languages:        'Lingue',
+    dimensions:       'Misure',
+    material:         'Materia',
+    conservation:     'Conservazione',
+    inventory:        'Inventario',
+    cardAuthor:       'Autore Scheda',
+    transAuthor:      'Autore Traduzione',
+    pubDate:          'Data Pubblicazione',
+    writingSystems:   'Sistemi Scrittori',
+    scripts:          'Scritture',
+    noTags:           'Nessun tag disponibile',
+  },
+  mappa: {
+    legend:           '📍 Legenda',
+    legendTitle:      'Le Tracce: luoghi, monumenti e opere d\'arte con una memoria linguistica',
+    legendBody:
+      'Le Tracce sono segni tangibili della presenza delle lingue in Europa, conservate in luoghi, monumenti e opere d\'arte. Ogni Traccia rappresenta un legame unico tra un oggetto materiale e la sua dimensione immateriale: la storia culturale e linguistica che porta con sé.',
+    legendBody2:
+      'Attraverso iscrizioni, graffiti, toponimi, leggende, canti e altri elementi, le Tracce documentano la ricchezza e la varietà delle lingue che hanno abitato e continuano a risuonare nei territori europei. Questo patrimonio forma un vero e proprio museo vivente, il "Diffuseum".',
+    legendBody3:
+      'Studiare le Tracce significa comprendere la storia, la memoria e il valore simbolico dei luoghi.',
+    legendCta:        'Esplora la mappa e scopri le Tracce nel territorio europeo.',
+  },
+  lingue:  { tagNotFound: 'Lingua non trovata' },
+  tag:     { tagNotFound: 'Tag non trovato' },
+  nav: {
+    home:    'Home',
+    gallery: 'Gallery',
+    map:     'Mappa',
+  },
+}

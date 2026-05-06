@@ -1,0 +1,14 @@
+# Dipendenze
+node_modules/
+.pnp
+.pnp.js
+
+# Produzione
+dist/
+
+# File di sistema
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

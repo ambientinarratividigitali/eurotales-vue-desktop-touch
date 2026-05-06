@@ -1,0 +1,147 @@
+/* ==========================================================================
+   TRACCE — Design Tokens & Globals
+   Stesso stile dei progetti Risonanze e Timeline.
+   Palette: beige caldo + burlywood (come l'originale tracce/tracce_eng).
+   ========================================================================== */
+   
+/* ── Link disabilitati ─────────────────────────────────────────── */
+a {
+    /* Rimuove il colore blu e la sottolineatura */
+    color: inherit;
+    text-decoration: none;
+
+    /* Impedisce ogni interazione (clic, hover) */
+    pointer-events: none;
+
+    /* Rende il cursore quello standard invece della manina */
+    cursor: default;
+}
+
+:root {
+  /* — Colori brand — */
+  --bg-pagina:     #fbf3ea;   /* sfondo crema dell'originale */
+  --bg-card:       #dbd3c8;   /* bg item-card / table */
+  --bg-card-hover: #d2c8b8;
+  --bg-card-soft:  rgba(251, 243, 234, 0.9);
+
+  --accent:        burlywood;
+  --accent-strong: rgb(177, 147, 108);
+  --accent-deep:   #2f2a25;   /* per accordion toggle scuri della mappa */
+  --accent-deep-2: #463b33;
+
+  --text:          #1a1a1a;
+  --text-soft:     #333;
+  --text-muted:    #666;
+  --text-light:    gray;
+  --border:        #ccc;
+  --border-soft:   #ddd;
+
+  /* — Tipografia fluida (clamp per scalare anche su 4K) — */
+  --fs-xs:   clamp(11px,  0.75vw, 14px);
+  --fs-sm:   clamp(13px,  0.9vw,  16px);
+  --fs-base: clamp(15px,  1.05vw, 19px);
+  --fs-md:   clamp(17px,  1.2vw,  22px);
+  --fs-lg:   clamp(20px,  1.5vw,  28px);
+  --fs-xl:   clamp(24px,  2vw,    36px);
+  --fs-2xl:  clamp(30px,  2.6vw,  48px);
+
+  /* — Spaziature — */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* — Forme — */
+  --radius-sm: 5px;
+  --radius:    8px;
+  --radius-lg: 12px;
+
+  /* — Ombre — */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow:    0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.20);
+
+  /* — Header / Footer altezze — */
+  --header-h:  clamp(56px, 6vh, 88px);
+  --footer-h:  clamp(40px, 5vh, 64px);
+
+  /* — Touch target minimi (touch 4K) — */
+  --tap-min:   clamp(40px, 3vw, 56px);
+  --tap-large: clamp(56px, 4vw, 80px);
+}
+
+/* — Reset minimo — */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-pagina);
+  color: var(--text);
+  font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+  font-size: var(--fs-base);
+  line-height: 1.45;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img { max-width: 100%; display: block; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* — Touch / 4K ottimizzazioni — */
+html {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* — Su touchscreen disattivo gli effetti :hover — */
+@media (hover: none) {
+  .item:hover,
+  .card:hover,
+  a:hover { transform: none !important; box-shadow: none !important; }
+}
+
+/* — 4K: alza i tap target — */
+@media (min-width: 2560px) {
+  :root {
+    --tap-min:   64px;
+    --tap-large: 96px;
+    --header-h:  96px;
+    --footer-h:  72px;
+  }
+}
+
+/* — Loader spinner riusabile — */
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: transparent;
+  width: 36px;
+  height: 36px;
+  animation: spin-loader 1s linear infinite;
+  border-radius: 50%;
+  margin: var(--sp-5) auto;
+}
+@keyframes spin-loader {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* — Skeleton card animation — */
+@keyframes skeleton-loading {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
