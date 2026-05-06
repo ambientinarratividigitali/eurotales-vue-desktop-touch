@@ -67,11 +67,6 @@
             <p v-html="bioDinamica"></p>
           </div>
 
-          <div class="info-block" v-if="persona.bibliografia">
-            <div class="info-row"><span class="lbl">{{ t('ieri.fields.bibliografia') }}</span></div>
-            <p class="biblio" v-html="persona.bibliografia"></p>
-          </div>
-
           <div class="info-block" v-if="persona.autore">
             <InfoRow :label="t('ieri.fields.autoreScheda')" :value="persona.autore" />
           </div>

@@ -19,8 +19,8 @@
       <!-- Tooltip -->
       <text 
         v-if="hovered && inDictionary(hovered)" 
-        x="80" 
-        y="700" 
+        x="70" 
+        y="725" 
         class="country-label" 
         text-anchor="start">
         {{ countryName(hovered) }} {{ hasData(hovered) ? '(' + activeCountries[hovered] + ')' : '' }}
@@ -120,11 +120,10 @@ function handleClick(country) {
   stroke-width: 1.5;
 }
 .country-label {
-  fill: white;
+  fill: rgb(68, 24, 24);
   font-size: 18px;
   font-family: var(--font-body);
   font-weight: 600;
   pointer-events: none;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 </style>

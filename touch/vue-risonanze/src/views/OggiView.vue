@@ -1,9 +1,9 @@
 <template>
   <PageLayout domain="oggi" @back="goBack">
     <header class="top-bar">
+      <logo />
       <h1 class="page-title is-oggi">{{ t('oggi.title') }}</h1>
     </header>
-
     <div class="loading-screen" v-if="store.loading">
       <div class="spinner is-oggi"></div>
       <p>{{ t('common.loading') }}</p>
@@ -50,6 +50,7 @@ import { useDataStore, nationName, DICT_SIGLA } from '../stores/dataStore.js'
 import DonutChart from '../components/DonutChart.vue'
 import EuropeMap from '../components/EuropeMap.vue'
 import PageLayout from '../components/PageLayout.vue'
+import logo from '../components/Logo.vue'
 
 const router = useRouter()
 const { t, locale } = useI18n()
@@ -270,7 +271,7 @@ const mapActiveOggi = computed(() => {
   background-size: cover; 
   background-position: center; 
   background-blend-mode: overlay;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .side-info {
@@ -280,7 +281,7 @@ const mapActiveOggi = computed(() => {
   color: var(--w-85);
   font-weight: 500;
 }
-.side-info :deep(b) { color: white; }
+.side-info :deep(b) { color: rgb(68, 24, 24); }
 
 .left-panel,
 .right-panel {

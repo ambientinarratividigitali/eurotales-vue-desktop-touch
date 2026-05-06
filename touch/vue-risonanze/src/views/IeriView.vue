@@ -1,6 +1,7 @@
 <template>
   <PageLayout domain="ieri" @back="goBack">
     <header class="top-bar">
+      <logo />
       <h1 class="page-title is-ieri">{{ t('ieri.title') }}</h1>
       <div class="header-actions">
         <button class="btn btn-oro" @click="showSearchModal = true">
@@ -81,12 +82,6 @@
         <div class="modal-overlay" v-if="showSearchModal" @click.self="showSearchModal = false">
           <div class="modal-box">
             <h2 class="modal-title">{{ t('ieri.cerca') }}</h2>
-            <input
-              v-model="searchQuery"
-              :placeholder="t('common.search')"
-              class="search-input"
-              autofocus
-            />
             <div class="search-results thin-scroll">
               <div
                 v-for="p in searchResults"
@@ -116,6 +111,8 @@ import { useDataStore, nationName } from '../stores/dataStore.js'
 import DonutChart from '../components/DonutChart.vue'
 import EuropeMap from '../components/EuropeMap.vue'
 import PageLayout from '../components/PageLayout.vue'
+import logo from '../components/Logo.vue'
+
 
 const router = useRouter()
 const { t, locale } = useI18n()
@@ -158,7 +155,7 @@ function refreshTexts() {
   if (step.value === 'area') {
     descChartA.value = t('ieri.areaLabel')
     descChartB.value = t('ieri.nationLabel')
-    sideContent.value = `${t('ieri.everyColor')} <b>${store.risonanzeIeri.length}</b> ${t('ieri.biografie')}. ${t('ieri.clickToDiscover')}`
+    sideContent.value = `${t('ieri.everyColor')} <b>${store.risonanzeIeri.length}</b> ${t('ieri.biografie')} ${t('ieri.clickToDiscover')}`
     return
   }
   if (step.value === 'lingua' && selectedArea.value) {
@@ -342,10 +339,27 @@ function selectPersonaFromSearch(p) {
   })
 }
 
+
 // ── Search ────────────────────────────────────────────────────────
 const searchResults = computed(() => {
   const q = searchQuery.value.toLowerCase().trim()
-  if (!q) return store.risonanzeIeri.slice(0, 50)
+
+
+  store.risonanzeIeri.sort((a, b) => {
+    const titoloA = a.titolo.toUpperCase().trim(); // ignore upper and lowercase
+    const titoloB = b.titolo.toUpperCase().trim(); // ignore upper and lowercase
+    if (titoloA < titoloB) {
+      return -1;
+    }
+    if (titoloA > titoloB) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+  if (!q) return store.risonanzeIeri
+
   return store.risonanzeIeri
     .filter(p => {
       const it = (p.titolo || '').toLowerCase()
@@ -353,6 +367,7 @@ const searchResults = computed(() => {
       return it.includes(q) || en.includes(q)
     })
     .slice(0, 100)
+    .sort()
 })
 
 // ── Back button della PageLayout ──────────────────────────────────
@@ -389,7 +404,7 @@ function goBack() {
   background-size: cover; 
   background-position: center; 
   background-blend-mode: overlay;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .side-info {
@@ -399,7 +414,7 @@ function goBack() {
   color: var(--w-85);
   font-weight: 500;
 }
-.side-info :deep(b) { color: white; }
+.side-info :deep(b) { color: var(--w-85); }
 
 .left-panel,
 .right-panel {
@@ -439,6 +454,8 @@ function goBack() {
   transition: background var(--tr-base), transform var(--tr-base);
   text-align: center;
   min-height: 44px;
+  color: var(--w-85);
+
 }
 .name-item:hover {
   background: var(--w-12);

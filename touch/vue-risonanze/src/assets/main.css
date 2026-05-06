@@ -46,16 +46,16 @@ a {
   --w-18: rgba(255,255,255,0.18);
   --w-22: rgba(255,255,255,0.22);
   --w-30: rgba(255,255,255,0.30);
-  --w-45: rgba(255,255,255,0.45);
+  --w-45: rgba(68, 24, 24, 1);
   --w-65: rgba(255,255,255,0.65);
-  --w-85: rgba(255,255,255,0.85);
+  --w-85: rgba(68, 24, 24, 1);
 
   --b-50: rgba(0,0,0,0.50);
   --b-65: rgba(0,0,0,0.65);
   --b-75: rgba(0,0,0,0.75);
 
   /* Tipografia */
-  --font-display: 'Cormorant Garamond', serif;
+  --font-display: 'Montserrat', serif;
   --font-body:    'Montserrat', sans-serif;
 
   /* Scale fluide — ottimizzate per 1080p → 4K touch 55" */
@@ -290,19 +290,6 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ── Search (modale) ─────────────────────────────────────────────── */
-.search-input {
-  width: 100%;
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--radius-pill);
-  border: 2px solid var(--w-22);
-  background: var(--w-05);
-  color: white;
-  font-size: var(--fs-base);
-  font-family: var(--font-body);
-  outline: none;
-  transition: border-color var(--tr-base);
-}
-.search-input:focus { border-color: var(--oro); }
 
 .search-results {
   max-height: 40vh;

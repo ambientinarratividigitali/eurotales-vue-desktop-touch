@@ -32,7 +32,7 @@ export default {
     tabLingue: 'Language Table →',
     cerca: 'Search a person',
     everyColor: 'Each color corresponds to the area where the',
-    clickToDiscover: 'Click to discover the languages that resonate in each.',
+    clickToDiscover: '<br>Click to discover the languages that resonate in each',
     areaSelected: 'You are viewing {count} languages from the area: {area}',
     languageSelected: 'You are viewing {count} figures whose mother tongue is: {language}',
     nationSelected: 'You are viewing {count} figures born in: {nation}',

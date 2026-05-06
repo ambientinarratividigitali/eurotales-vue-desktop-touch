@@ -9,11 +9,7 @@
 
     <!-- Logo Eurotales -->
     <header class="home-header">
-      <img
-        src="https://eurotales.eu/wp-content/uploads/2021/05/Logo-eurotales-ROSSO-DEFINITIVO.png"
-        alt="Eurotales"
-        class="logo"
-      />
+      <logo />
     </header>
 
     <!-- Language switcher in alto a destra (solo qui, non c'è PageLayout) -->
@@ -86,6 +82,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import logo from '../components/Logo.vue'
 
 const router = useRouter()
 const { t, locale } = useI18n()
@@ -107,7 +104,7 @@ const showInfo = ref(false)
   background-size: cover; 
   background-position: center; 
   background-blend-mode: overlay; 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 /* Sfondo animato */
@@ -133,7 +130,6 @@ const showInfo = ref(false)
   top: var(--sp-3);
   left: var(--sp-4);
 }
-.logo { height: clamp(36px, 4vw, 64px); }
 
 /* Lang switch in alto a destra */
 .home-lang {
@@ -173,7 +169,8 @@ const showInfo = ref(false)
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
   font-weight: 600;
-  color: white;
+  color: var(--w-85);
+
   letter-spacing: 0.02em;
   line-height: 1;
 }
