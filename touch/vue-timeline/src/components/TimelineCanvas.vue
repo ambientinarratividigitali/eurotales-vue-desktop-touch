@@ -58,16 +58,24 @@ function applyMarkerStyles() {
     const style = props.markerStyles[ev.unique_id]
     if (!style) return
     const el = document.getElementById(`${ev.unique_id}-marker`)
-    if (!el?.children?.[1]) return
-    el.children[1].style.backgroundColor = style.color
-    if (style.hasImage) {
-      el.children[1].style.borderColor = '#bababa'
-      el.children[1].style.borderWidth = '4px'
+    if (!el) return
+
+    // Colore sfondo del marker
+    const container = el.querySelector('.tl-timemarker-content-container')
+    if (container) container.style.backgroundColor = style.color
+
+    // Bordo se ha immagine
+    if (style.hasImage && container) {
+      container.style.borderColor = '#bababa'
+      container.style.borderWidth = '4px'
     }
-    if (style.whiteText) {
-      const textEl = el.children[1]?.children?.[0]?.children?.[0]?.children?.[0]
-      if (textEl) textEl.style.color = 'white'
-    }
+
+    // Colore testo — seleziona tutti gli elementi di testo dentro il marker
+    const textColor = style.whiteText ? 'white' : '#1a1a1a'
+    console.log(`Applying text color ${textColor} to marker ${ev.unique_id}`)
+    el.querySelectorAll('.tl-headline, .tl-timemarker-text, p, span').forEach(textEl => {
+      textEl.style.setProperty('color', textColor, 'important')
+    })
   })
 }
 
@@ -184,9 +192,45 @@ function setZoomIndex(idx) {
 }
 
 
+// Naviga al marker precedente o successivo nella timeline (delta = -1 o +1).
+// TimelineJS espone goToId() e config.events ordinati per data.
+// Troviamo l'evento corrente tramite _timenav._current_time, poi scorriamo
+// all'evento adiacente.
+function navigateMarker(delta) {
+  if (!tl) return
+
+  // Lista degli eventi ordinata per anno (come li ha costruiti buildData)
+  const events = tl.config?.events
+  if (!events || events.length === 0) return
+
+  // Trova l'indice corrente guardando quale marker è "active" nel DOM,
+  // oppure usa _current_time come fallback
+  let currentIdx = -1
+
+  // Metodo 1: cerca l'elemento attivo nel DOM
+  const activeEl = containerRef.value?.querySelector('.tl-timemarker.tl-timemarker-active')
+  if (activeEl) {
+    const activeId = activeEl.id?.replace('-marker', '')
+    currentIdx = events.findIndex(e => String(e.unique_id) === String(activeId))
+  }
+
+  // Metodo 2: fallback → primo evento
+  if (currentIdx < 0) currentIdx = 0
+
+  const nextIdx = Math.max(0, Math.min(events.length - 1, currentIdx + delta))
+  if (nextIdx === currentIdx) return
+
+  const targetId = events[nextIdx].unique_id
+  tl.goToId(targetId)
+
+
+}
+
 defineExpose({
-  zoomIn()  { setZoomIndex(currentZoom + 1) },  // più zoom → meno anni visibili
-  zoomOut() { setZoomIndex(currentZoom - 1) },  // meno zoom → più anni visibili
+  zoomIn()  { setZoomIndex(currentZoom + 1) },
+  zoomOut() { setZoomIndex(currentZoom - 1) },
+  prevMarker() { navigateMarker(-1) },
+  nextMarker() { navigateMarker(+1) },
   getZoomLevel() { return currentZoom },
   getZoomMin()   { return 0 },
   getZoomMax()   { return ZOOM_SEQUENCE.length - 1 },

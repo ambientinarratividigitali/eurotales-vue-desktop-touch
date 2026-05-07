@@ -69,18 +69,25 @@ const linguageGroups = computed(() => {
   const usedLangIds = new Set(store.milestonesRaw.map(m => m.lingua))
   const availableLangs = store.lingue.filter(l => usedLangIds.has(l.id))
 
-  const groups = {}
+  // Usa Map (non oggetto) per evitare collisioni con chiavi speciali come '__proto__'
+  const map = new Map()
+
   availableLangs.forEach(l => {
-    const area = l.Area_linguistica || '—'
-    if (!groups[area]) groups[area] = []
-    groups[area].push(l)
+    const raw = (l.Area_linguistica ?? '—')
+
+    const label = raw.trim().replace(/^\d+(\.\d+)?\s*/, '') || '—'
+    const key = label.toLowerCase()
+    if (!map.has(key)) {
+      map.set(key, { label, items: [], sortKey: areaOrder(raw) })
+    }
+    map.get(key).items.push(l)
   })
 
-  return Object.entries(groups)
-    .sort((a, b) => areaOrder(a[0]) - areaOrder(b[0]))
-    .map(([area, items]) => ({
-      area: area.replace(/^\d+(\.\d+)?\s*/, ''),
-      items: items.sort((x, y) => getName(x).localeCompare(getName(y))),
+  return [...map.values()]
+    .sort((a, b) => a.sortKey - b.sortKey)
+    .map(g => ({
+      area: g.label,
+      items: g.items.sort((x, y) => getName(x).localeCompare(getName(y))),
     }))
 })
 
@@ -138,12 +145,12 @@ function toggleLanguage(lang) {
 }
 
 .close-btn {
-  width: clamp(44px, 3.5vw, 64px);
-  height: clamp(44px, 3.5vw, 64px);
+  width: clamp(56px, 4.5vw, 84px);
+  height: clamp(56px, 4.5vw, 84px);
   border-radius: 50%;
   background: var(--w-08);
   color: white;
-  font-size: clamp(24px, 2vw, 36px);
+  font-size: clamp(28px, 2.4vw, 44px);
   line-height: 1;
   transition: background var(--tr-base);
   touch-action: manipulation;
@@ -188,7 +195,7 @@ function toggleLanguage(lang) {
 }
 
 .group-area {
-  font-size: var(--fs-xs);
+  font-size: clamp(12px, 1.1vw, 22px);
   color: var(--w-45);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -209,16 +216,16 @@ function toggleLanguage(lang) {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  padding: var(--sp-1) var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
   border-radius: var(--radius-md);
   background: transparent;
   border: 1px solid transparent;
   color: var(--w-65);
-  font-size: var(--fs-sm);
+  font-size: clamp(14px, 1.3vw, 26px);
   font-family: var(--font-body);
   cursor: pointer;
   transition: all var(--tr-base);
-  min-height: clamp(44px, 3.5vw, 64px);
+  min-height: clamp(56px, 5vw, 88px);
   touch-action: manipulation;
   width: 100%;
   text-align: left;

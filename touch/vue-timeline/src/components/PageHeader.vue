@@ -5,24 +5,26 @@
            class="logo" alt="Eurotales" />
     </a>
 
-    <!-- Titolo app -->
     <h1 class="title">{{ t('app.title') }}</h1>
 
-    <!-- Istruzione centrale -->
     <p class="instruction">{{ t('ui.instruction') }}</p>
 
-    <!-- Legenda lingue selezionate -->
     <aside class="legend" v-if="languages.length">
       <span class="legend-label-prefix">{{ t('fields.language') }}:</span>
-      <div
-        v-for="lang in languages"
-        :key="lang.id"
-        class="legend-item"
-      >
+      <div v-for="lang in languages" :key="lang.id" class="legend-item">
         <span class="legend-dot" :style="{ background: lang.colore_TL }"></span>
         <span class="legend-label">{{ getName(lang) }}</span>
       </div>
     </aside>
+
+    <button
+      v-if="showFilter"
+      class="filter-btn"
+      @click="$emit('open-filters')"
+    >
+      <span class="filter-icon" aria-hidden="true">⚙</span>
+      <span class="filter-label">{{ t('ui.filterLanguages') }}</span>
+    </button>
   </header>
 </template>
 
@@ -34,12 +36,12 @@ const { t, locale } = useI18n()
 const store = useDataStore()
 
 defineProps({
-  languages: { type: Array, default: () => [] },
+  languages:  { type: Array,   default: () => [] },
+  showFilter: { type: Boolean, default: false },
 })
+defineEmits(['open-filters'])
 
-function getName(lang) {
-  return store.linguaName(lang, locale.value)
-}
+function getName(lang) { return store.linguaName(lang, locale.value) }
 </script>
 
 <style scoped>
@@ -49,19 +51,19 @@ function getName(lang) {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-2) var(--sp-4);
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  height: clamp(72px, 8vh, 120px);
+  padding: var(--sp-3) var(--sp-5);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  height: clamp(120px, 13vh, 200px);
   flex-shrink: 0;
 }
 
 .logo-link { display: flex; align-items: center; height: 100%; }
-.logo { height: 80%; max-height: 64px; }
+.logo { height: 80%; max-height: 130px; }
 
 .title {
   font-family: var(--font-display);
-  font-size: var(--fs-xl);
+  font-size: clamp(28px, 2.8vw, 56px);
   font-weight: 700;
   color: var(--rosso);
   letter-spacing: 0.05em;
@@ -69,10 +71,9 @@ function getName(lang) {
   flex-shrink: 0;
 }
 
-/* Istruzione centrata */
 .instruction {
   flex: 1;
-  font-size: var(--fs-sm);
+  font-size: clamp(14px, 1.2vw, 24px);
   color: var(--grigio-mid);
   font-style: italic;
   text-align: center;
@@ -81,7 +82,6 @@ function getName(lang) {
   text-overflow: ellipsis;
 }
 
-/* Legenda */
 .legend {
   display: flex;
   align-items: center;
@@ -92,7 +92,7 @@ function getName(lang) {
 }
 
 .legend-label-prefix {
-  font-size: var(--fs-sm);
+  font-size: clamp(13px, 1.1vw, 22px);
   font-weight: 600;
   color: var(--grigio-mid);
   text-transform: uppercase;
@@ -102,34 +102,51 @@ function getName(lang) {
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--fs-sm);
+  gap: 8px;
+  font-size: clamp(13px, 1.1vw, 22px);
   color: var(--grigio-dark);
   font-weight: 500;
   white-space: nowrap;
 }
 
 .legend-dot {
-  width: clamp(14px, 1.2vw, 22px);
-  height: clamp(14px, 1.2vw, 22px);
+  width: clamp(18px, 1.5vw, 30px);
+  height: clamp(18px, 1.5vw, 30px);
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-@media (max-width: 1024px) {
-  .instruction { display: none; }
+/* ── Bottone filtro ───────────────────────────────────────── */
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: clamp(14px, 1.2vw, 22px) clamp(20px, 2vw, 40px);
+  min-height: clamp(60px, 5.5vw, 96px);
+  background: var(--rosso);
+  color: white;
+  border-radius: var(--radius-lg);
+  font-size: clamp(15px, 1.3vw, 26px);
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+  margin-left: auto;
+  box-shadow: 0 3px 12px rgba(145, 43, 61, 0.35);
 }
+.filter-btn:hover  { background: var(--rosso-dark); }
+.filter-btn:active { transform: scale(0.96); }
 
+.filter-icon { font-size: 1.2em; line-height: 1; }
+
+@media (max-width: 1024px) { .instruction { display: none; } }
 @media (max-width: 768px) {
   .title { display: none; }
   .legend-label-prefix { display: none; }
   .legend-item .legend-label { display: none; }
-}
-
-@media (min-width: 2560px) {
-  .legend-dot {
-    width: clamp(18px, 1.5vw, 28px);
-    height: clamp(18px, 1.5vw, 28px);
-  }
 }
 </style>

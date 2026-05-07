@@ -3,10 +3,12 @@
     <!-- Sfondo decorativo -->
     <div class="bg-static" aria-hidden="true"></div>
 
-    <!-- Header: logo + istruzione + legenda lingue -->
+    <!-- Header: logo + istruzione + legenda lingue + filtro -->
     <PageHeader
       v-if="store.loaded"
       :languages="selectedLanguageObjs"
+      :show-filter="true"
+      @open-filters="showFilters = true"
     />
     <PageHeader v-else />
 
@@ -37,14 +39,14 @@
       />
     </div>
 
-    <!-- Footer: zoom + categorie + filtro lingue + lang switcher -->
+    <!-- Footer: zoom + frecce + categorie + lang switcher -->
     <PageFooter
       v-if="store.loaded"
-      :show-filter="true"
       v-model:selectedCategories="selectedCategoryIds"
       @zoom-in="zoomIn"
       @zoom-out="zoomOut"
-      @open-filters="showFilters = true"
+      @prev-marker="prevMarker"
+      @next-marker="nextMarker"
     />
 
     <!-- Popup info evento -->
@@ -150,6 +152,8 @@ function onMarkerClick(uniqueId) {
 
 function zoomIn()  { timelineRef.value?.zoomIn() }
 function zoomOut() { timelineRef.value?.zoomOut() }
+function prevMarker() { timelineRef.value?.prevMarker() }
+function nextMarker() { timelineRef.value?.nextMarker() }
 </script>
 
 <style scoped>

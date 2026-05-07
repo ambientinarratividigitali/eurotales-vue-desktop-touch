@@ -129,6 +129,13 @@ export const useDataStore = defineStore('data', () => {
       lingue.value        = payload.lingue
       categorie.value     = payload.categorie
 
+      // DEBUG TEMPORANEO — rimuovere dopo verifica
+      console.log('Colore_testo values:', payload.lingue.map(l => ({
+        lingua: l.lingua,
+        Colore_testo: l.Colore_testo,
+        tipo: typeof l.Colore_testo,
+      })))
+
       saveCache(payload)
     } catch (e) {
       error.value = e.message
@@ -186,7 +193,7 @@ export const useDataStore = defineStore('data', () => {
       immagine: milestone.immagine,
       lingua:    linguaName(milestone.linguaObj, locale),
       colore:    milestone.linguaObj?.colore_TL || '#888',
-      textColor: milestone.linguaObj?.Colore_testo === 1 ? 'white' : 'inherit',
+      textColor: Number(milestone.linguaObj?.Colore_testo) === 1 ? 'white' : 'black',
       categoria: categoriaName(milestone.categoriaObj, locale),
       areaLinguistica: milestone.linguaObj?.Area_linguistica || '',
     }

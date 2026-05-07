@@ -134,7 +134,7 @@ img { max-width: 100%; height: auto; }
   font-weight: 500;
   white-space: nowrap;
   transition: all var(--tr-base);
-  min-height: 48px;
+  min-height: clamp(52px, 4.5vw, 80px);
 }
 .btn:active { transform: scale(0.97); transition: transform 80ms ease; }
 
@@ -281,8 +281,8 @@ img { max-width: 100%; height: auto; }
 
 /* Marker della timeline: dimensioni fluide leggibili a 1080p e 4K */
 .tl-timemarker-content-container {
-  height: clamp(80px, 8vh, 140px) !important;
-  width: clamp(110px, 10vw, 200px) !important;
+  height: clamp(90px, 9vh, 160px) !important;
+  width: clamp(130px, 11vw, 220px) !important;
   border-radius: 8px !important;
   cursor: pointer;
   touch-action: manipulation;
@@ -293,15 +293,15 @@ img { max-width: 100%; height: auto; }
 }
 
 .tl-timemarker .tl-headline {
-  font-size: clamp(11px, 0.95vw, 18px) !important;
+  font-size: clamp(12px, 1.1vw, 22px) !important;
   line-height: 1.25 !important;
-  padding: 6px !important;
+  padding: 8px !important;
   font-family: var(--font-body) !important;
   font-weight: 600 !important;
   -webkit-line-clamp: 5 !important;
   text-transform: none !important;
 }
-.tl-timemarker-text { padding: 4px !important; }
+.tl-timemarker-text { padding: 6px !important; }
 
 /* Frecce navigazione TimelineJS: scale per touch 4K */
 .tl-slidenav-next,
