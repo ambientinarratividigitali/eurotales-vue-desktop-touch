@@ -34,7 +34,6 @@ const tlOptions = {
   default_bg_color: '#47474724',
   font: 'https://eurotales.eu/wp-content/themes/emaurri/timeline/TimeLine/MyCustomFont.css',
   timenav_height_percentage: 90,
-  dragging: false,
   zoom_sequence: ZOOM_SEQUENCE,
   initial_zoom: ZOOM_INITIAL,
 }
@@ -90,6 +89,8 @@ function setup() {
       applyMarkerStyles()
       tl.setZoom(ZOOM_INITIAL)
       currentZoom = ZOOM_INITIAL
+      attachTouchHandlers()
+      scrollToStart()
       emit('ready', tl)
     }, 500)
   }
@@ -97,6 +98,124 @@ function setup() {
   tl._onSlideChange = (e) => {
     emit('marker-click', e.unique_id)
   }
+}
+
+// Sposta lo slider all'inizio della timeline (primo marker visibile a sinistra).
+// Da chiamare dopo il caricamento iniziale e ogni volta che cambiano gli eventi.
+function scrollToStart() {
+  if (!tl) return
+  const slider = tl?._timenav?._el?.slider
+  const mask   = tl?._timenav?._el?.marker_container_mask
+  if (!slider || !mask) return
+
+  // Ferma qualsiasi animazione interna di TimelineJS
+  if (tl._timenav?.animator?.stop) tl._timenav.animator.stop()
+  if (tl._timenav?._swipable?.stopMomentum) tl._timenav._swipable.stopMomentum()
+
+  // Lo slider con left = visibleW/2 mette il primo marker al bordo sinistro
+  // dell'area visibile (perché lo slider stesso ha origine al centro).
+  const visibleW = mask.offsetWidth || 0
+  const totalW   = slider.offsetWidth || 1
+  const targetLeft = visibleW / 2
+
+  slider.style.transition = 'none'
+  slider.className = 'tl-timenav-slider'
+  slider.style.left = `${targetLeft}px`
+
+  // Aggiorna i constraint dello swipable interno
+  if (tl._timenav?._swipable?.updateConstraint) {
+    tl._timenav._swipable.updateConstraint({
+      top: false, bottom: false,
+      left: visibleW / 2,
+      right: -(totalW - visibleW / 2),
+    })
+  }
+}
+
+
+// TimelineJS3 ha un supporto touch interno ma inaffidabile. Lo bypassiamo:
+// agganciamo direttamente il dito allo slider della timenav, calcolando lo
+// spostamento e settando .style.left con i constraint corretti.
+// Distinguiamo tap (no movimento) da drag (movimento > soglia) per non
+// bloccare il click sui marker.
+const DRAG_THRESHOLD = 8 // px: sotto questa soglia consideriamo un tap
+let touchStartX = 0
+let sliderStartLeft = 0
+let touchActive = false
+let isDragging = false
+
+function attachTouchHandlers() {
+  const timenav = containerRef.value?.querySelector('.tl-timenav')
+  if (!timenav) return
+
+  timenav.addEventListener('touchstart', onTouchStart, { passive: true })
+  timenav.addEventListener('touchmove',  onTouchMove,  { passive: false })
+  timenav.addEventListener('touchend',   onTouchEnd,   { passive: true })
+}
+
+function onTouchStart(e) {
+  if (e.touches.length !== 1) return
+  const slider = tl?._timenav?._el?.slider
+  if (!slider) return
+
+  touchStartX = e.touches[0].clientX
+  sliderStartLeft = parseFloat(slider.style.left || '0')
+  touchActive = true
+  isDragging = false
+
+  // NON chiamiamo preventDefault qui: lasciamo che il browser inizi a
+  // valutare se è un tap (per il click sul marker) o un movimento.
+}
+
+function onTouchMove(e) {
+  if (!touchActive || e.touches.length !== 1) return
+  const slider = tl?._timenav?._el?.slider
+  const mask   = tl?._timenav?._el?.marker_container_mask
+  if (!slider || !mask) return
+
+  const dx = e.touches[0].clientX - touchStartX
+
+  // Se non abbiamo ancora deciso se è drag, controlla la soglia
+  if (!isDragging) {
+    if (Math.abs(dx) < DRAG_THRESHOLD) return
+    // Superata la soglia: ora è un drag
+    isDragging = true
+
+    // Ferma le animazioni e disattiva la transition CSS
+    if (tl._timenav?.animator?.stop) tl._timenav.animator.stop()
+    if (tl._timenav?._swipable?.stopMomentum) tl._timenav._swipable.stopMomentum()
+    slider.style.transition = 'none'
+  }
+
+  let newLeft = sliderStartLeft + dx
+
+  // Constraint: lo slider va da visibleW/2 (inizio) a -(totalW - visibleW/2) (fine)
+  const totalW   = slider.offsetWidth || 1
+  const visibleW = mask.offsetWidth   || 0
+  const maxLeft  = visibleW / 2
+  const minLeft  = -(totalW - visibleW / 2)
+
+  if (newLeft > maxLeft) newLeft = maxLeft
+  if (newLeft < minLeft) newLeft = minLeft
+
+  slider.style.left = `${newLeft}px`
+
+  // Solo durante il drag effettivo blocchiamo lo scroll della pagina
+  e.preventDefault()
+}
+
+function onTouchEnd() {
+  if (!touchActive) return
+  touchActive = false
+
+  const slider = tl?._timenav?._el?.slider
+  if (slider) {
+    // Riattiva la transition per click successivi
+    slider.style.transition = ''
+  }
+
+  // Se non era un drag, lasciamo che il tap arrivi al marker normalmente.
+  isDragging = false
 }
 
 onMounted(setup)
@@ -231,6 +350,7 @@ defineExpose({
   zoomOut() { setZoomIndex(currentZoom - 1) },
   prevMarker() { navigateMarker(-1) },
   nextMarker() { navigateMarker(+1) },
+  scrollToStart,
   getZoomLevel() { return currentZoom },
   getZoomMin()   { return 0 },
   getZoomMax()   { return ZOOM_SEQUENCE.length - 1 },
@@ -250,4 +370,5 @@ defineExpose({
 .timeline-container :deep(.tl-timeline) {
   height: 100% !important;
 }
+
 </style>

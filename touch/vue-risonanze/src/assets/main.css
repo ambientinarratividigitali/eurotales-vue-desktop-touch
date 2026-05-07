@@ -115,6 +115,11 @@ html, body, #app {
   text-rendering: optimizeLegibility;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  cursor: none;
+}
+
+*, *::before, *::after {
+  cursor: none !important;
 }
 
 button {

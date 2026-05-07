@@ -254,7 +254,7 @@ export const useDataStore = defineStore('tracce', {
       const ckey = `traccia-${id}`
       const cached = cacheGet(ckey)
       if (cached) return cached
-      const res = await jget(`${API_BASE}/items/tracce/${id}?fields=*.*.*`)
+      const fields = ["*.*.*","iscrizioni.iscrizione_id.*","iscrizioni.iscrizione_id.sistemi_scrittori.*","iscrizioni.iscrizione_id.scritture.*","iscrizioni.iscrizione_id.lingue.*"].join(","); const res = await jget(`${API_BASE}/items/tracce/${id}?fields=${fields}`)
       const data = res.data
       cacheSet(ckey, data)
       return data

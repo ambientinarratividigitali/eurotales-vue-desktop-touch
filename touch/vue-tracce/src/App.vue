@@ -12,6 +12,7 @@ import PageHeader from './components/PageHeader.vue'
 <style scoped>
 .page-main {
   width: 100%;
-  min-height: calc(100vh - var(--header-h));
+  height: calc(100vh - var(--header-h));
+  overflow: hidden;
 }
 </style>

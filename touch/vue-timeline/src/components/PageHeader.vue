@@ -132,7 +132,7 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
   letter-spacing: 0.04em;
   white-space: nowrap;
   cursor: pointer;
-  touch-action: manipulation;
+  
   flex-shrink: 0;
   transition: background 0.15s ease, transform 0.1s ease;
   margin-left: auto;

@@ -180,10 +180,12 @@ const scritture = computed(() => {
 
 const iscrizioni = computed(() => {
   // Tabella relazione tracce ↔ iscrizione: array di {iscrizione_id: {…}}
-  const arr = findM2M(item.value, ['iscrizioni', 'iscrizione', 'tracce_iscrizione'])
+  const arr = findM2M(item.value, ['iscrizioni'])
+  const seen = new Set()
   return arr
     .map(rel => unwrapRel(rel, 'iscrizione_id'))
     .filter(Boolean)
+    .filter(isc => { if (seen.has(isc.id)) return false; seen.add(isc.id); return true })
     .map(isc => ({
       id: isc.id,
       testo: isc.testo || '',
@@ -338,29 +340,6 @@ function toggleInscription(id) { openInscriptions.value[id] = !openInscriptions.
 
         <!-- COL DX: tags + lingue + meta + tabella + mappa -->
         <aside class="details-section">
-          <!-- TAGS -->
-          <div class="tags-block">
-            <hr class="dark-hr" />
-            <div v-if="tagsList.length">
-              <a v-for="tag in tagsList" :key="tag.id" class="tag-link"
-                 @click.prevent="router.push({ name: 'tag', params: { id: tag.id } })"
-                 :href="`#/tag/${tag.id}`">
-                <span>{{ (tag.label || '').toUpperCase() }}</span>
-              </a>
-            </div>
-            <span v-else class="muted">{{ t('scheda.noTags') }}</span>
-
-            <!-- LINGUE -->
-            <template v-for="(lng, idx) in lingueList" :key="lng.id">
-              <hr class="thin-hr" />
-              <a class="lingua-link"
-                 @click.prevent="router.push({ name: 'lingua', params: { nome: encodeURIComponent(lng.slug) } })"
-                 :href="`#/lingua/${encodeURIComponent(lng.slug)}`">
-                <span>{{ (lng.label || '').toUpperCase() }}</span>
-              </a>
-            </template>
-          </div>
-
           <!-- META autori -->
           <div class="meta-block">
             <p v-if="item.autore_scheda">

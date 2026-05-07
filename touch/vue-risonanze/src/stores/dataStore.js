@@ -350,3 +350,15 @@ export const DICT_SIGLA_EN = {
 export function nationName(sigla, locale = 'it') {
   return locale === 'en' ? (DICT_SIGLA_EN[sigla] || sigla) : (DICT_SIGLA[sigla] || sigla)
 }
+
+export function sortItemsAlpha(a, b) {
+  const itemA = a.toUpperCase().trim(); // ignore upper and lowercase
+  const itemB = b.toUpperCase().trim(); // ignore upper and lowercase
+  if (itemA < itemB) {
+    return -1;
+  }
+  if (itemA > itemB) {
+    return 1;
+  }
+  return 0;
+}

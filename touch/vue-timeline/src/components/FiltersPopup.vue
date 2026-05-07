@@ -153,7 +153,7 @@ function toggleLanguage(lang) {
   font-size: clamp(28px, 2.4vw, 44px);
   line-height: 1;
   transition: background var(--tr-base);
-  touch-action: manipulation;
+  
 }
 .close-btn:hover  { background: var(--w-22); }
 .close-btn:active { transform: scale(0.95); }
@@ -226,7 +226,7 @@ function toggleLanguage(lang) {
   cursor: pointer;
   transition: all var(--tr-base);
   min-height: clamp(56px, 5vw, 88px);
-  touch-action: manipulation;
+  
   width: 100%;
   text-align: left;
 }

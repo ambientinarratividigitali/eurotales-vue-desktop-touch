@@ -6,7 +6,7 @@
  * con fallback all'italiano se vuoti (gestito in dataStore).
  */
 export default {
-  app: { title: 'Timeline', subtitle: 'Eurotales' },
+  app: { title: 'Linea del Tempo', subtitle: 'Eurotales' },
   ui: {
     loading: 'Caricamento...',
     back: 'Indietro',

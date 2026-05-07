@@ -114,7 +114,7 @@ function toggleCategory(id) {
   cursor: pointer;
   transition: background var(--tr-base), transform 0.1s;
   box-shadow: 0 3px 10px rgba(145, 43, 61, 0.3);
-  touch-action: manipulation;
+  
 }
 .zoom-btn:hover  { background: var(--rosso-dark); }
 .zoom-btn:active { transform: scale(0.92); }
@@ -138,7 +138,7 @@ function toggleCategory(id) {
   cursor: pointer;
   transition: background var(--tr-base), transform 0.1s;
   box-shadow: 0 3px 10px rgba(43, 145, 127, 0.3);
-  touch-action: manipulation;
+  
   flex-shrink: 0;
 }
 .nav-btn:hover  { background: #1f7060; }
@@ -183,7 +183,7 @@ function toggleCategory(id) {
   white-space: nowrap;
   cursor: pointer;
   transition: all var(--tr-base);
-  touch-action: manipulation;
+  
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -218,7 +218,7 @@ function toggleCategory(id) {
   color: var(--grigio-mid);
   cursor: pointer;
   transition: all var(--tr-base);
-  touch-action: manipulation;
+  
 }
 .lang-btn.active { background: var(--rosso); color: white; border-color: var(--rosso); }
 .lang-btn:hover  { background: var(--beige-deep); color: var(--grigio-dark); }

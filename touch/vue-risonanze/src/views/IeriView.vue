@@ -120,7 +120,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useDataStore, nationName } from '../stores/dataStore.js'
+import { useDataStore, nationName, sortItemsAlpha } from '../stores/dataStore.js'
 import DonutChart from '../components/DonutChart.vue'
 import EuropeMap from '../components/EuropeMap.vue'
 import PageLayout from '../components/PageLayout.vue'
@@ -354,23 +354,12 @@ function selectPersonaFromSearch(p) {
   })
 }
 
-
 // ── Search ────────────────────────────────────────────────────────
 const searchResults = computed(() => {
   const q = searchQuery.value.toLowerCase().trim()
 
-
   store.risonanzeIeri.sort((a, b) => {
-    const titoloA = a.titolo.toUpperCase().trim(); // ignore upper and lowercase
-    const titoloB = b.titolo.toUpperCase().trim(); // ignore upper and lowercase
-    if (titoloA < titoloB) {
-      return -1;
-    }
-    if (titoloA > titoloB) {
-      return 1;
-    }
-
-    return 0;
+    return sortItemsAlpha(a.titolo, b.titolo);
   });
 
   if (!q) return store.risonanzeIeri

@@ -93,6 +93,15 @@ a {
 /* ── Reset minimal ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Lascia che TimelineJS gestisca il touch internamente sulla timenav */
+.tl-timenav,
+.tl-timenav-slider,
+.tl-timenav-slider-background,
+.tl-timenav-marker-container,
+.tl-timemarker {
+  touch-action: none !important;
+}
+
 html, body, #app {
   width: 100%;
   height: 100%;
@@ -106,9 +115,14 @@ html, body, #app {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   /* Niente delay 300ms su double-tap-zoom */
-  touch-action: manipulation;
+  
   /* Niente pull-to-refresh accidentale */
   overscroll-behavior: none;
+  cursor: none;   
+}
+
+*, *::before, *::after {
+  cursor: none !important;
 }
 
 button {
@@ -117,7 +131,7 @@ button {
   font-family: inherit;
   color: inherit;
   background: none;
-  touch-action: manipulation;
+  
 }
 
 img { max-width: 100%; height: auto; }
@@ -237,7 +251,7 @@ img { max-width: 100%; height: auto; }
   transition: all var(--tr-base);
   min-height: 44px;
   min-width: 56px;
-  touch-action: manipulation;
+  
 }
 .lang-btn.active {
   background: var(--rosso);
@@ -285,7 +299,7 @@ img { max-width: 100%; height: auto; }
   width: clamp(130px, 11vw, 220px) !important;
   border-radius: 8px !important;
   cursor: pointer;
-  touch-action: manipulation;
+  
   transition: transform 80ms ease;
 }
 .tl-timemarker-content-container:active {
@@ -306,7 +320,7 @@ img { max-width: 100%; height: auto; }
 /* Frecce navigazione TimelineJS: scale per touch 4K */
 .tl-slidenav-next,
 .tl-slidenav-previous {
-  touch-action: manipulation;
+  
 }
 
 /* ── Touch device feedback ───────────────────────────────────── */

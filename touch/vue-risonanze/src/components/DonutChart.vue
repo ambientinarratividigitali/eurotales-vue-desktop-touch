@@ -64,11 +64,16 @@ const legendItems = computed(() => {
   if (!ds) return []
   const values = ds.data || []
   const colors = ds.backgroundColor || []
-  return labels.map((label, i) => ({
+
+  const items = labels.map((label, i) => ({
     label,
     value: values[i] ?? 0,
     color: colors[i] || '#888',
-  }))
+  }));
+  
+  const sortedItems = items.sort((a, b) => b.value - a.value) // Ordina per valore decrescente
+
+  return sortedItems
 })
 
 const totalValue = computed(() =>
