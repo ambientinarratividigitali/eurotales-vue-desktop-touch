@@ -18,6 +18,7 @@
           v-for="m in placedMarkers"
           :key="`tick-${m.id}`"
           class="tl-tick"
+          :class="{ active: activeId === m.id }"
           :style="{ left: m.tickX + 'px', top: m.tickTop + 'px', height: m.tickHeight + 'px' }"
         />
 
@@ -252,7 +253,6 @@ function navigateMarker(delta) {
   const target = list[next]
   activeId.value = String(target.id)
   centerOnYear(target.anno)
-  emit('marker-click', String(target.id))
 }
 
 function centerOnYear(year) {
@@ -374,6 +374,13 @@ defineExpose({
   width: 1px;
   background: rgba(0, 0, 0, 0.35);
   pointer-events: none;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.tl-tick.active {
+  width: 3px;
+  background: var(--rosso, #912B3D);
+  box-shadow: 0 0 8px rgba(145, 43, 61, 0.6);
 }
 
 .tl-axis {
