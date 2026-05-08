@@ -289,52 +289,7 @@ img { max-width: 100%; height: auto; }
 .fade-enter-active, .fade-leave-active { transition: opacity var(--tr-base); }
 .fade-enter-from, .fade-leave-to       { opacity: 0; }
 
-/* ── Override TimelineJS ─────────────────────────────────────── */
-.tl-timeline {
-  background: transparent !important;
-  font-family: var(--font-body) !important;
-}
-.tl-timenav,
-.tl-timenav-slider,
-.tl-timenav-slider-background {
-  background: rgba(255, 255, 255, 0.18) !important;
-}
-.tl-storyslider {
-  height: 0 !important;
-  overflow: hidden !important;
-  flex: 0 !important;
-  min-height: 0 !important;
-}
 
-/* Marker della timeline: dimensioni fluide leggibili a 1080p e 4K */
-.tl-timemarker-content-container {
-  height: clamp(90px, 9vh, 160px) !important;
-  width: clamp(130px, 11vw, 220px) !important;
-  border-radius: 8px !important;
-  cursor: pointer;
-  
-  transition: transform 80ms ease;
-}
-.tl-timemarker-content-container:active {
-  transform: scale(0.96);
-}
-
-.tl-timemarker .tl-headline {
-  font-size: clamp(12px, 1.1vw, 22px) !important;
-  line-height: 1.25 !important;
-  padding: 8px !important;
-  font-family: var(--font-body) !important;
-  font-weight: 600 !important;
-  -webkit-line-clamp: 5 !important;
-  text-transform: none !important;
-}
-.tl-timemarker-text { padding: 6px !important; }
-
-/* Frecce navigazione TimelineJS: scale per touch 4K */
-.tl-slidenav-next,
-.tl-slidenav-previous {
-  
-}
 
 /* ── Touch device feedback ───────────────────────────────────── */
 /* Su touchscreen :hover si appiccica dopo il tap; lo neutralizzo */

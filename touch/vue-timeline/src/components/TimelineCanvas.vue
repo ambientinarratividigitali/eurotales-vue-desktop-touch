@@ -80,7 +80,7 @@ function applyMarkerStyles() {
   })
 }
 
-function setup() {
+async function setup() {
   if (!containerRef.value || !window.TL) return
   if (!props.events || props.events.length === 0) {
     const msg = t('errors.fetchFailed')
@@ -90,6 +90,14 @@ function setup() {
       </div>`
     return
   }
+
+  // ── Aspetta CSS + font prima di costruire la timeline ────────────
+  // TimelineJS misura l'altezza dei marker e dei tick al momento del
+  // render. Se il CSS di TimelineJS o il font Eurotales arrivano dopo
+  // (cache vuota / hard reload), le misure vengono prese su elementi
+  // non ancora stilizzati → tick troppo corti, gap tra marker e asse.
+  // Con cache calda invece tutto è istantaneo e funziona.
+  await waitForStylesAndFonts()
 
   // Pulisci eventuale istanza precedente
   containerRef.value.innerHTML = ''
@@ -102,6 +110,16 @@ function setup() {
       attachTouchHandlers()
       attachMarkerClickHandlers()
       scrollToStart()
+      // ── FIX TICK A METÀ SU TOUCH/HARD RELOAD ──────────────────
+      // TimelineJS calcola l'altezza dei tick una sola volta al primo
+      // render, basandosi sulle dimensioni dei marker. Su touch il
+      // calcolo iniziale è sbagliato (probabilmente perché TL.Browser
+      // rileva touch e applica un layout interno con offset diversi
+      // mentre il CSS sta ancora venendo applicato).
+      // Forziamo il ricalcolo simulando un resize, che fa rieseguire
+      // tutti i metodi interni _calculateSize / _assignRowsToMarkers /
+      // _positionMarkers dopo che il DOM è completamente stabile.
+      forceRecomputeLayout()
       emit('ready', tl)
     }, 500)
   }
@@ -109,6 +127,71 @@ function setup() {
   tl._onSlideChange = (e) => {
     emit('marker-click', e.unique_id)
   }
+}
+
+// Forza TimelineJS a ricalcolare tutte le sue dimensioni interne.
+// Usato dopo l'inizializzazione per correggere il bug dei tick a metà
+// che si presenta su touchscreen quando il rendering iniziale avviene
+// con il CSS non ancora completamente applicato.
+function forceRecomputeLayout() {
+  if (!tl) return
+
+  // Strategia 1: chiama updateDisplay() esplicitamente — è il metodo
+  // pubblico di TimelineJS3 che ricalcola tutte le altezze e riposiziona
+  // marker, tick e asse temporale.
+  if (typeof tl.updateDisplay === 'function') {
+    tl.updateDisplay()
+  }
+
+  // Strategia 2: anche il TimeNav interno ha _updateDisplay(). Lo
+  // chiamiamo direttamente per forzare il ricalcolo delle altezze
+  // dei marker e dei tick (dove viene generato il gap).
+  setTimeout(() => {
+    if (!tl) return
+    if (tl._timenav?._updateDisplay) {
+      try {
+        tl._timenav._updateDisplay()
+      } catch (e) { console.warn('updateDisplay timenav failed', e) }
+    }
+    // Strategia 3: dispatch resize event come fallback estremo —
+    // TimelineJS aggancia un listener su window.resize che richiama
+    // tutto il pipeline di layout.
+    window.dispatchEvent(new Event('resize'))
+  }, 100)
+}
+
+// Aspetta che (1) tutti i <link rel="stylesheet"> esterni siano caricati
+// e (2) i font siano pronti. Risolve il bug "tick a metà su hard reload":
+// senza questa attesa TimelineJS può costruirsi prima che timeline.css
+// sia applicato → misura altezze sbagliate.
+function waitForStylesAndFonts() {
+  const cssPromises = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+    .map(link => {
+      // Se lo stylesheet è già caricato, link.sheet è non-null e accessibile
+      try {
+        if (link.sheet && link.sheet.cssRules) return Promise.resolve()
+      } catch (_) { /* cross-origin: cssRules getta, ma sheet esiste = caricato */
+        if (link.sheet) return Promise.resolve()
+      }
+      // Altrimenti aspetta load/error
+      return new Promise(resolve => {
+        const done = () => {
+          link.removeEventListener('load',  done)
+          link.removeEventListener('error', done)
+          resolve()
+        }
+        link.addEventListener('load',  done, { once: true })
+        link.addEventListener('error', done, { once: true })
+        // Safety net: max 3 secondi di attesa per stylesheet
+        setTimeout(done, 3000)
+      })
+    })
+
+  const fontPromise = (document.fonts && document.fonts.ready)
+    ? document.fonts.ready.catch(() => {})
+    : Promise.resolve()
+
+  return Promise.all([...cssPromises, fontPromise])
 }
 
 // Sposta lo slider all'inizio della timeline (primo marker visibile a sinistra).
