@@ -7,7 +7,7 @@
         <button class="btn btn-oro" @click="showSearchModal = true">
           {{ t('ieri.cerca') }}
         </button>
-        <button class="btn btn-ghost" @click="showLingueModal = true">
+        <button class="btn btn-oro" @click="showLingueModal = true">
           {{ t('ieri.tabLingue') }}
         </button>
       </div>
@@ -20,7 +20,7 @@
 
     <main class="ieri-main" v-else-if="store.ieriLoaded">
       <div class="side-info">
-        <p v-html="sideContent"></p>
+        <p v-html="sideContent"> </p>
       </div>
 
       <!-- Sinistra: donut chart, OPPURE lista personaggi se siamo su list-map -->
@@ -402,7 +402,7 @@ function goBack() {
   grid-template-rows: auto 1fr;
   position: relative;
   z-index: var(--z-content);
-  padding: 0 var(--sp-4) calc(var(--sp-6) + var(--sp-4));
+  padding: 0 var(--sp-4) calc(var(--sp-6) + var(--sp-6));
   gap: var(--sp-3);
   overflow: hidden;
   background-image: url('/img/mappaStoricaBiancoNero.png');
@@ -415,7 +415,7 @@ function goBack() {
 .side-info {
   grid-column: 1 / -1;
   padding: var(--sp-2) 50% var(--sp-2) var(--sp-3);
-  font-size: var(--fs-md);
+  font-size: var(--fs-sm);
   line-height: 1.5;
   color: var(--w-85);
   font-weight: 500;

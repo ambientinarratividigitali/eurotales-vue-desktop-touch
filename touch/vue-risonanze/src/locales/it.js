@@ -32,9 +32,9 @@ export default {
     cerca: 'Cerca una persona',
     everyColor: 'Ogni colore corrisponde all\'area in cui sono collocate le',
     clickToDiscover: '<br>Clicca per scoprire le lingue che risuonano in ciascuna',
-    areaSelected: 'Stai visualizzando un totale di {count} lingue dell\'area: {area}',
+    areaSelected: 'Stai visualizzando un totale di {count} lingue dell\'area:<br>{area}',
     languageSelected: 'Stai visualizzando {count} personaggi con lingua madre: {language}',
-    nationSelected: 'Stai visualizzando {count} personaggi nati in: {nation}',
+    nationSelected: 'Stai visualizzando {count} personaggi nati in:<br>{nation}',
     descLanguageMother: 'Lingua madre: {lang}',
     descBornIn: 'Nati in: {nation}',
     ring: {
@@ -79,8 +79,8 @@ export default {
     title: 'Come si naviga fra le Risonanze?',
     ieriTitle: 'IERI',
     oggiTitle: 'OGGI',
-    ieriDesc: 'Le Risonanze Ieri sono visualizzate in due modi: a sinistra una ruota colorata divisa in venti spicchi simboleggia le aree linguistiche. A destra c\'è una mappa dell\'Europa contemporanea.',
-    oggiDesc: 'Le RISONANZE OGGI conservano una base dati in costante aggiornamento che organizza informazioni sulle lingue delle nostre comunità.',
+    ieriDesc: 'Le Risonanze Ieri sono visualizzate in due modi: a sinistra una ruota colorata divisa in venti spicchi simboleggia le aree linguistiche.<br>A destra c\'è una mappa dell\'Europa contemporanea.',
+    oggiDesc: 'Le Risonanze Oggi conservano una base dati in costante aggiornamento che organizza informazioni sulle lingue delle nostre comunità.',
   },
   common: {
     loading: 'Caricamento...',

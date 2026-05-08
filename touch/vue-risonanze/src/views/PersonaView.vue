@@ -3,9 +3,6 @@
     <header class="top-bar">
       <h1 class="page-title is-ieri">{{ titoloDinamico?.toUpperCase() }}</h1>
       <div class="header-actions">
-        <button class="btn btn-ghost" @click="showLingueModal = true">
-          {{ t('ieri.tabLingue') }}
-        </button>
       </div>
     </header>
 
@@ -42,8 +39,6 @@
 
       <!-- DESTRA: scheda biografica -->
       <section class="right-panel">
-        <div class="panel-label">{{ titoloDinamico?.toUpperCase() }}</div>
-
         <div class="info-scroll thin-scroll">
           <div class="info-block">
             <InfoRow v-if="persona.date_nascita" :label="t('ieri.fields.dataNascita')" :value="persona.date_nascita" />
@@ -239,6 +234,14 @@ function goBack() { router.push({ name: 'ieri' }) }
   overflow: hidden;
   gap: var(--sp-4);
   min-height: 0;
+}
+
+/* Sovrascrive lo stile globale solo per l'etichetta in QUESTA pagina */
+.panel-label {
+  font-size: var(--fs-xs); /* Rende il font più piccolo */
+  padding: var(--sp-1) var(--sp-2); /* Riduce leggermente i margini interni */
+  min-height: 28px; /* Riduce l'altezza minima del riquadro */
+  letter-spacing: 0.05em; /* Aggiusta la spaziatura per renderlo leggibile */
 }
 
 .left-panel {

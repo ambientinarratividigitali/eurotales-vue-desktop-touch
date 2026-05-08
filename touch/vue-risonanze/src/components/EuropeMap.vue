@@ -63,8 +63,9 @@ const countries = computed(() => europePaths)
 // OGGI: vuoto verde tenue, pieno verde solido, selezionato rosso identità
 // IERI: vuoto grigio tenue, pieno scuro solido, selezionato rosso identità
 const COLOR = {
-  oggi: { empty: '#2b917f80', full: '#2B917F', selected: '#912B3D' },
-  ieri: { empty: '#1a1a1a55', full: '#0e0c0a',  selected: '#912B3D' },
+  oggi: { empty: '#2b917f80', full: '#2B917F', selected: '#DBB971' }, 
+  
+  ieri: { empty: '#1a1a1a55', full: '#0e0c0a',  selected: '#912B3D' }, 
 }
 
 function inDictionary(id) {
@@ -142,8 +143,8 @@ function handleClick(country) {
 .country-path.clickable {
   cursor: pointer;
 }
-.country-path.clickable:hover,
-.country-path.hovered.clickable {
+.country-path.clickable:not(.selected):hover,
+.country-path.hovered.clickable:not(.selected) {
   filter: brightness(1.6);
 }
 .country-path.selected {

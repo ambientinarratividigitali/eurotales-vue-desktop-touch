@@ -80,7 +80,7 @@ export default {
     title: 'How to navigate the Resonances?',
     ieriTitle: 'YESTERDAY',
     oggiTitle: 'TODAY',
-    ieriDesc: 'Yesterday\'s Resonances are displayed in two ways: on the left a colored wheel divided into twenty slices symbolizes the linguistic areas. On the right is a map of contemporary Europe.',
+    ieriDesc: 'Yesterday\'s Resonances are displayed in two ways: on the left a colored wheel divided into twenty slices symbolizes the linguistic areas.<br>On the right is a map of contemporary Europe.',
     oggiDesc: 'TODAY\'s RESONANCES maintain a constantly updated database that organizes information about the languages of our communities.',
   },
   common: {

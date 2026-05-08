@@ -101,17 +101,17 @@ defineEmits(['back'])
 .lang-btn {
   padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius-pill);
-  font-size: var(--fs-base);
+  font-size: var(--fs-lg);
   font-weight: 600;
-  letter-spacing: 0.06em;
-  background: var(--b-65);
+  letter-spacing: 0.05em;
+  background: var(--b-50);
   border: 1.5px solid var(--w-30);
   color: var(--w-85);
   cursor: pointer;
   backdrop-filter: blur(8px);
   transition: all var(--tr-base);
-  min-height: 64px;
-  min-width: 72px;
+  min-height: 56px;
+  min-width: 64px;
 }
 .lang-btn.active {
   background: var(--w-18);

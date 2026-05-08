@@ -12,17 +12,6 @@
       <logo />
     </header>
 
-    <!-- Language switcher in alto a destra (solo qui, non c'è PageLayout) -->
-    <div class="home-lang">
-      <button
-        v-for="loc in ['it', 'en']"
-        :key="loc"
-        class="lang-btn"
-        :class="{ active: locale === loc }"
-        @click="locale = loc"
-      >{{ loc.toUpperCase() }}</button>
-    </div>
-
     <!-- Titolo + cerchi navigazione -->
     <div class="home-title">
       <h1>{{ t('home.title') }}</h1>
@@ -62,7 +51,7 @@
           <div class="modal-cols">
             <div class="modal-col">
               <h3 class="col-ieri">{{ t('info.ieriTitle') }}</h3>
-              <p>{{ t('info.ieriDesc') }}</p>
+              <p v-html="t('info.ieriDesc')"></p>
             </div>
             <div class="modal-col">
               <h3 class="col-oggi">{{ t('info.oggiTitle') }}</h3>
@@ -75,6 +64,16 @@
         </div>
       </div>
     </transition>
+    <!-- Language switcher in alto a destra (solo qui, non c'è PageLayout) -->
+    <div class="home-lang">
+      <button
+        v-for="loc in ['it', 'en']"
+        :key="loc"
+        class="lang-btn"
+        :class="{ active: locale === loc }"
+        @click="locale = loc"
+      >{{ loc.toUpperCase() }}</button>
+    </div>
   </div>
 </template>
 
@@ -90,6 +89,8 @@ const showInfo = ref(false)
 </script>
 
 <style scoped>
+.logo { height: clamp(40px, 6vw, 300px); }
+
 .home {
   width: 100vw;
   height: 100vh;
@@ -134,7 +135,7 @@ const showInfo = ref(false)
 /* Lang switch in alto a destra */
 .home-lang {
   position: absolute;
-  top: var(--sp-3);
+  bottom: var(--sp-6);
   right: var(--sp-4);
   display: flex;
   gap: var(--sp-1);
@@ -142,7 +143,7 @@ const showInfo = ref(false)
 .lang-btn {
   padding: var(--sp-2) var(--sp-4);
   border-radius: var(--radius-pill);
-  font-size: var(--fs-base);
+  font-size: var(--fs-lg);
   font-weight: 600;
   letter-spacing: 0.05em;
   background: var(--b-50);
@@ -226,7 +227,7 @@ const showInfo = ref(false)
 
 .circle-label {
   font-family: var(--font-display);
-  font-size: clamp(28px, 3.2vw, 96px);
+  font-size: clamp(28px, 3.4vw, 290px);
   font-weight: 600;
   letter-spacing: 0.05em;
   line-height: 1;
@@ -238,7 +239,7 @@ const showInfo = ref(false)
   font-weight: 500;
   opacity: 0.9;
   text-align: center;
-  max-width: clamp(160px, 14vw, 320px);
+  max-width: clamp(160px, 16vw, 900px);
   letter-spacing: 0.02em;
   line-height: 1.3;
 }
@@ -254,8 +255,8 @@ const showInfo = ref(false)
 
 /* IERI */
 .circle-ieri {
-  width: clamp(180px, 22vw, 640px);
-  height: clamp(180px, 22vw, 640px);
+  width: clamp(180px, 30vw, 900px);
+  height: clamp(180px, 30vw, 900px);
   background: radial-gradient(circle at 40% 40%, rgba(145, 43, 61, 0.85), rgba(80, 20, 30, 0.95));
   color: white;
   box-shadow: 0 20px 60px rgba(145, 43, 61, 0.4);
@@ -264,8 +265,8 @@ const showInfo = ref(false)
 
 /* INFO */
 .circle-info {
-  width: clamp(110px, 11vw, 320px);
-  height: clamp(110px, 11vw, 320px);
+  width: clamp(110px, 16vw, 500px);
+  height: clamp(110px, 16vw, 500px);
   background: radial-gradient(circle at 40% 40%, rgba(80, 75, 65, 0.9), rgba(40, 38, 35, 0.95));
   color: var(--w-85);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -274,8 +275,8 @@ const showInfo = ref(false)
 
 /* OGGI */
 .circle-oggi {
-  width: clamp(180px, 22vw, 640px);
-  height: clamp(180px, 22vw, 640px);
+  width: clamp(180px, 30vw, 900px);
+  height: clamp(180px, 30vw, 900px);
   background: radial-gradient(circle at 40% 40%, rgba(43, 145, 127, 0.85), rgba(20, 80, 70, 0.95));
   color: white;
   box-shadow: 0 20px 60px rgba(43, 145, 127, 0.4);

@@ -21,7 +21,7 @@ a {
 :root {
   /* Palette identità */
   --rosso:      #912B3D;
-  --rosso-soft: rgba(145, 43, 61, 0.85);
+  --rosso-soft: rgb(145, 43, 61);
   --verde:      #2B917F;
   --verde-soft: rgba(43, 145, 127, 0.85);
   --oro:        #DBB971;
@@ -193,7 +193,7 @@ img { max-width: 100%; height: auto; }
   align-items: center;
   justify-content: space-between;
   padding: var(--sp-3) var(--sp-4);
-  background: linear-gradient(to bottom, var(--b-65), transparent);
+  background-color: var(--bg-map); 
   gap: var(--sp-2);
 }
 
@@ -216,7 +216,7 @@ img { max-width: 100%; height: auto; }
 
 /* ── Etichetta panel (descrittore sopra grafici/mappe) ───────────── */
 .panel-label {
-  font-size: var(--fs-md);
+  font-size: var(--fs-sm);
   font-weight: 600;
   text-align: center;
   color: var(--w-85);
@@ -403,7 +403,7 @@ img { max-width: 100%; height: auto; }
   .search-item { min-height: 80px; }
 
   .btn { padding: var(--sp-3) var(--sp-5); }
-  .panel-label { min-height: 48px; padding: var(--sp-3) 0; }
+  .panel-label { min-height: 48px; padding: var(--sp-3) var(--sp-4); }
   .modal-box { padding: var(--sp-6); border-radius: 32px; }
   .lingua-dot { width: 28px; height: 28px; }
   .thin-scroll::-webkit-scrollbar { width: 14px; }

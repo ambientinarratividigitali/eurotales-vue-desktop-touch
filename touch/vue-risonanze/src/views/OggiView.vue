@@ -24,7 +24,7 @@
       <section class="right-panel">
         <div class="panel-label">{{ descB }}</div>
 
-        <div class="map-box" v-if="step === 'initial'">
+        <div class="map-box" v-if="step === 'initial' || step === 'lingua'">
           <EuropeMap
             domain="oggi"
             :activeCountries="mapActiveOggi"
