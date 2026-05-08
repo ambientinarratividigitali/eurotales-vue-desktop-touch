@@ -61,9 +61,9 @@ export default {
   oggi: {
     title: 'Risonanze di Oggi',
     chartTitle: 'Fasce di età',
-    totalData: 'Set Totale di dati',
+    totalData: 'Set Totale di dati:<br>',
     totalCount: 'Set di dati totale',
-    viewing: 'Stai visualizzando il {perc}% del totale',
+    viewing: 'Stai visualizzando il: {perc}% del totale',
     ages: {
       '11-18': '11-18 anni',
       '19-30': '19-30 anni',

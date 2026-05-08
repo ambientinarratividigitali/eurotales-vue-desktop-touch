@@ -80,7 +80,7 @@ function langName(linguaObj) {
 const sideContent = computed(() => {
   if (!store.oggiLoaded) return ''
   if (step.value === 'initial') {
-    return `<p><b>${t('oggi.totalData')}: ${oggiData.value.length}</b></p>`
+    return `<p><b>${t('oggi.totalData')} ${oggiData.value.length}</b></p>`
   }
   const perc = ((currentSet.value.length / oggiData.value.length) * 100).toFixed(1)
   return `

@@ -62,7 +62,7 @@ export default {
   oggi: {
     title: 'Resonances of Today',
     chartTitle: 'Age groups',
-    totalData: 'Total data set',
+    totalData: 'Total data set:<br>',
     totalCount: 'Total data set',
     viewing: 'You are viewing {perc}% of the total',
     ages: {
