@@ -20,7 +20,7 @@ export default {
     oggi: 'TODAY',
     info: 'INFO',
     ieriDesc: 'Resonances in history',
-    oggiDesc: 'Resonances in our',
+    oggiDesc: 'Resonances in our streets',
   },
   ieri: {
     title: 'Resonances of Yesterday',

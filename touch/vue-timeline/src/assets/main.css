@@ -239,7 +239,7 @@ img { max-width: 100%; height: auto; }
 .modal-title {
   font-family: var(--font-display);
   font-size: var(--fs-lg);
-  color: var(--rosso);
+  color: var(--w-45);
   flex-shrink: 0;
 }
 

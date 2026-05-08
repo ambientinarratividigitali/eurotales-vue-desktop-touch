@@ -1,30 +1,32 @@
 <template>
   <header class="page-header">
-    <a href="https://eurotales.eu" class="logo-link">
-      <img src="https://eurotales.eu/wp-content/uploads/2021/05/Logo-eurotales-ROSSO-DEFINITIVO.png"
-           class="logo" alt="Eurotales" />
-    </a>
+    <div class="logo-title-content">
+      <a href="https://eurotales.eu" class="logo-link">
+        <img src="https://eurotales.eu/wp-content/uploads/2021/05/Logo-eurotales-ROSSO-DEFINITIVO.png"
+            class="logo" alt="Eurotales" />
+      </a>
 
-    <h1 class="title">{{ t('app.title') }}</h1>
+      <h1 class="title">{{ t('app.title') }}</h1> 
+      <span></span>
+    </div>
+    <div class="filtrilingua-lingue">
+      <span class="legend" v-if="languages.length">
+        <span class="legend-label-prefix">{{ t('fields.language') }}:</span>
+        <span v-for="lang in languages" :key="lang.id" class="legend-item">
+          <span class="legend-dot" :style="{ background: lang.colore_TL }"></span>
+          <span class="legend-label">{{ getName(lang) }}</span>
+        </span>
+      </span>
 
-    <p class="instruction">{{ t('ui.instruction') }}</p>
-
-    <aside class="legend" v-if="languages.length">
-      <span class="legend-label-prefix">{{ t('fields.language') }}:</span>
-      <div v-for="lang in languages" :key="lang.id" class="legend-item">
-        <span class="legend-dot" :style="{ background: lang.colore_TL }"></span>
-        <span class="legend-label">{{ getName(lang) }}</span>
-      </div>
-    </aside>
-
-    <button
-      v-if="showFilter"
-      class="filter-btn"
-      @click="$emit('open-filters')"
-    >
-      <span class="filter-icon" aria-hidden="true">⚙</span>
-      <span class="filter-label">{{ t('ui.filterLanguages') }}</span>
-    </button>
+      <button
+        v-if="showFilter"
+        class="filter-btn"
+        @click="$emit('open-filters')"
+      >
+        <span class="filter-icon" aria-hidden="true">⚙</span>
+        <span class="filter-label">{{ t('ui.filterLanguages') }}</span>
+      </button>
+    </div>
   </header>
 </template>
 
@@ -48,18 +50,34 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
 .page-header {
   position: relative;
   z-index: var(--z-header);
-  display: flex;
+  
   align-items: center;
   gap: var(--sp-3);
   padding: var(--sp-3) var(--sp-5);
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-  height: clamp(120px, 13vh, 200px);
+  height: clamp(200px, 13vh, 400px);
   flex-shrink: 0;
 }
 
-.logo-link { display: flex; align-items: center; height: 100%; }
+.logo-link {  align-items: center; height: 100%; }
 .logo { height: 80%; max-height: 130px; }
+
+.filtrilingua-lingue{
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.logo-title-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  min-width: 0;
+  flex-shrink: 0;
+}
 
 .title {
   font-family: var(--font-display);

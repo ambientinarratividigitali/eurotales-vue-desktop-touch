@@ -15,6 +15,7 @@ export default {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     instruction: 'Tap a marker to view details',
+    reset: 'Reset',
   },
   fields: {
     language: 'Language',
@@ -23,7 +24,7 @@ export default {
     caption: 'Caption',
   },
   errors: {
-    fetchFailed: 'Failed to load data',
+    fetchFailed: 'No events to display with the selected filters',
     maxLanguages: 'You can select at most {n} languages at a time',
     minLanguages: 'You must keep at least {n} language selected',
   },

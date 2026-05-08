@@ -16,6 +16,7 @@ export default {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     instruction: 'Tocca un marker per visualizzare i dettagli',
+    reset: "Azzera",
   },
   fields: {
     language: 'Lingua',
@@ -24,7 +25,7 @@ export default {
     caption: 'Didascalia',
   },
   errors: {
-    fetchFailed: 'Errore nel caricamento dei dati',
+    fetchFailed: 'Nessun evento da visualizzare con i filtri selezionati',
     maxLanguages: 'Puoi selezionare al massimo {n} lingue contemporaneamente',
     minLanguages: 'Devi mantenere almeno {n} lingua selezionata',
   },

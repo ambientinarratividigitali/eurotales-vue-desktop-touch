@@ -30,9 +30,11 @@
             </div>
           </div>
 
-          <button class="btn btn-oro" @click="$emit('apply')">
-            {{ t('ui.close') }}
-          </button>
+          <div class="filters-footer">
+            <button class="btn btn-azzera" @click="resetLanguages">
+              {{ t('ui.reset') || 'Azzera' }}
+            </button>
+          </div>
         </div>
       </div>
     </transition>
@@ -47,7 +49,7 @@ import { useDataStore } from '../stores/dataStore.js'
 const props = defineProps({
   open: Boolean,
   selectedLanguages: { type: Array, required: true },
-  maxLanguages: { type: Number, default: 5 },
+  maxLanguages: { type: Number, default: 6 },
   minLanguages: { type: Number, default: 1 },
 })
 const emit = defineEmits([
@@ -108,6 +110,14 @@ function toggleLanguage(lang) {
     list.push(lang.id)
   }
   emit('update:selectedLanguages', list)
+}
+
+function resetLanguages() {
+  const defaults = store.lingue
+    .filter(l => ['italiano', 'inglese'].includes(l.lingua?.toLowerCase()))
+    .map(l => l.id)
+  const fallback = defaults.length ? defaults : store.lingue.slice(0, 2).map(l => l.id)
+  emit('update:selectedLanguages', fallback)
 }
 </script>
 
@@ -267,14 +277,28 @@ function toggleLanguage(lang) {
   cursor: not-allowed;
 }
 
-/* ── Bottone chiudi in basso ─────────────────────────────── */
-.btn.btn-oro {
+/* ── Footer con bottone Azzera ───────────────────────────── */
+.filters-footer {
   flex-shrink: 0;
-  align-self: flex-end;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-azzera {
   min-height: clamp(48px, 4vw, 72px);
   padding: var(--sp-2) var(--sp-5);
   font-size: var(--fs-base);
+  border-radius: var(--radius-pill);
+  background: var(--rosso);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background var(--tr-base), transform 0.1s;
+  box-shadow: 0 3px 10px rgba(145, 43, 61, 0.3);
 }
+.btn-azzera:hover  { background: var(--rosso-dark); }
+.btn-azzera:active { transform: scale(0.96); }
 
 @media (hover: none) {
   .lang-item:hover { background: transparent; border-color: transparent; color: var(--w-65); }

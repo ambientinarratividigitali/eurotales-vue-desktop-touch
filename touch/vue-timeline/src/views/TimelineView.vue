@@ -14,6 +14,13 @@
 
     <!-- Stage centrale: timeline + overlay (loading/errore) -->
     <div class="timeline-stage">
+
+      <!-- Frecce navigazione: overlay centrato in fondo alla timeline -->
+      <div v-if="store.loaded" class="nav-arrows-overlay">
+        <button class="nav-circle-btn" @click="prevMarker" :aria-label="t('ui.prevMarker') || 'Precedente'">&lt;</button>
+        <button class="nav-circle-btn" @click="nextMarker" :aria-label="t('ui.nextMarker') || 'Successivo'">&gt;</button>
+      </div>
+
       <!-- Loading -->
       <div v-if="store.loading" class="loading-screen">
         <div class="spinner"></div>
@@ -65,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDataStore } from '../stores/dataStore.js'
 import PageHeader from '../components/PageHeader.vue'
@@ -78,7 +85,7 @@ const { t, locale } = useI18n()
 const store = useDataStore()
 
 // ── Limiti per i filtri lingua ──────────────────────────────
-const MAX_LANGUAGES = 5000
+const MAX_LANGUAGES = 6
 const MIN_LANGUAGES = 1
 
 // ── Stato locale ────────────────────────────────────────────
@@ -147,7 +154,12 @@ function onApplyFilters() {
 
 function onMarkerClick(uniqueId) {
   const milestone = store.milestones.find(m => String(m.id) === String(uniqueId))
-  if (milestone) selectedEvent.value = store.localizedEvent(milestone, locale.value)
+  if (!milestone) return
+  // Forza la chiusura prima di riaprire, anche se è lo stesso marker
+  selectedEvent.value = null
+  nextTick(() => {
+    selectedEvent.value = store.localizedEvent(milestone, locale.value)
+  })
 }
 
 function zoomIn()  { timelineRef.value?.zoomIn() }
@@ -184,6 +196,41 @@ function nextMarker() { timelineRef.value?.nextMarker() }
   flex: 1;
   min-height: 0;
 }
+
+/* ── Frecce navigazione (overlay centrato in basso sulla timeline) ── */
+.nav-arrows-overlay {
+  position: absolute;
+  bottom: clamp(12px, 1.5vh, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(12px, 1.5vw, 28px);
+  z-index: calc(var(--z-header) + 1);
+  pointer-events: none;
+}
+
+.nav-circle-btn {
+  pointer-events: all;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--rosso);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 150px;
+  font-weight: 100;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--tr-base), transform 0.1s;
+  box-shadow: 0 3px 14px var(--rosso);
+  border: none;
+  user-select: none;
+  opacity: 0.2;
+}
+.nav-circle-btn:hover  { background: var(--rosso-dark); }
+.nav-circle-btn:active { transform: scale(0.92); }
 
 .error-screen {
   position: absolute;

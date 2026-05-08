@@ -11,6 +11,8 @@
  *   usando un :key esterno (gestito dalla view).
  */
 import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const props = defineProps({
   events: { type: Array, required: true },
@@ -80,16 +82,25 @@ function applyMarkerStyles() {
 
 function setup() {
   if (!containerRef.value || !window.TL) return
+  if (!props.events || props.events.length === 0) {
+    const msg = t('errors.fetchFailed')
+    containerRef.value.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:5.2rem;">
+        ${msg}
+      </div>`
+    return
+  }
+
   // Pulisci eventuale istanza precedente
   containerRef.value.innerHTML = ''
   tl = new window.TL.Timeline(containerRef.value, buildData(), tlOptions)
-
   tl._onTimeNavLoaded = () => {
     setTimeout(() => {
       applyMarkerStyles()
       tl.setZoom(ZOOM_INITIAL)
       currentZoom = ZOOM_INITIAL
       attachTouchHandlers()
+      attachMarkerClickHandlers()
       scrollToStart()
       emit('ready', tl)
     }, 500)
@@ -216,6 +227,20 @@ function onTouchEnd() {
 
   // Se non era un drag, lasciamo che il tap arrivi al marker normalmente.
   isDragging = false
+}
+
+// Aggancia un listener click diretto su ogni marker del DOM.
+// Serve per emettere marker-click anche quando si riclicca il marker già attivo,
+// caso in cui TimelineJS non emette _onSlideChange.
+function attachMarkerClickHandlers() {
+  if (!containerRef.value || !tl?.config?.events) return
+  tl.config.events.forEach(ev => {
+    const el = document.getElementById(`${ev.unique_id}-marker`)
+    if (!el) return
+    el.addEventListener('click', () => {
+      emit('marker-click', ev.unique_id)
+    })
+  })
 }
 
 onMounted(setup)

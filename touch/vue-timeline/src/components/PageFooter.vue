@@ -7,16 +7,6 @@
       <button class="zoom-btn" @click="$emit('zoom-in')"  :aria-label="t('ui.zoomIn')">+</button>
     </div>
 
-    <!-- Frecce navigazione timeline (centro-sinistra) -->
-    <div class="nav-arrows">
-      <button class="nav-btn" @click="$emit('prev-marker')" :aria-label="t('ui.prevMarker') || 'Precedente'">
-        <span class="nav-arrow">&#8592;</span>
-      </button>
-      <button class="nav-btn" @click="$emit('next-marker')" :aria-label="t('ui.nextMarker') || 'Successivo'">
-        <span class="nav-arrow">&#8594;</span>
-      </button>
-    </div>
-
     <!-- Categorie (centro) -->
     <div class="categories-bar">
       <div class="cat-row">
@@ -75,8 +65,12 @@ const categoriesRow2 = computed(() => categories.value.slice(4))
 function toggleCategory(id) {
   const list = [...props.selectedCategories]
   const idx = list.indexOf(id)
-  if (idx >= 0) list.splice(idx, 1)
-  else list.push(id)
+  if (idx >= 0) {
+    if (list.length <= 1) return  // almeno 1 categoria deve rimanere selezionata
+    list.splice(idx, 1)
+  } else {
+    list.push(id)
+  }
   emit('update:selectedCategories', list)
 }
 </script>
@@ -118,37 +112,6 @@ function toggleCategory(id) {
 }
 .zoom-btn:hover  { background: var(--rosso-dark); }
 .zoom-btn:active { transform: scale(0.92); }
-
-/* ── Frecce navigazione ─────────────────────────────────── */
-.nav-arrows {
-  display: flex;
-  gap: var(--sp-2);
-  flex-shrink: 0;
-}
-
-.nav-btn {
-  width: clamp(56px, 5vw, 90px);
-  height: clamp(56px, 5vw, 90px);
-  border-radius: var(--radius-md);
-  background: var(--verde);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background var(--tr-base), transform 0.1s;
-  box-shadow: 0 3px 10px rgba(43, 145, 127, 0.3);
-  
-  flex-shrink: 0;
-}
-.nav-btn:hover  { background: #1f7060; }
-.nav-btn:active { transform: scale(0.92); }
-
-.nav-arrow {
-  font-size: clamp(22px, 2.2vw, 40px);
-  font-weight: 700;
-  line-height: 1;
-}
 
 /* ── Categorie ──────────────────────────────────────────── */
 .categories-bar {
@@ -197,6 +160,7 @@ function toggleCategory(id) {
   box-shadow: 0 2px 8px rgba(145,43,61,0.25);
 }
 .cat-btn.active:hover { background: var(--rosso-dark); border-color: var(--rosso-dark); }
+.cat-btn.active:only-of-type { cursor: not-allowed; }
 
 /* ── Lang switch ─────────────────────────────────────────── */
 .lang-switch {
