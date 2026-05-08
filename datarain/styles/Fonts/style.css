@@ -1,0 +1,42 @@
+@font-face
+{
+font-family: "garamondpremrpro-smbd";
+src: url("Fonts/garamondpremrpro-smbd.otf") format('opentype');
+}
+@font-face
+{
+font-family: "garamondpremrpro-it";
+src: url("Fonts/garamondpremrpro-it.otf") format('opentype');
+}
+
+@font-face
+{
+font-family: "PTSans-Regular";
+src: url("Fonts/PTSans-Regular.ttf") format('truetype');
+}
+
+mi
+{
+  font-family: garamondpremrpro-it;
+}
+pi
+{
+  font-size: 18;
+}
+
+
+#title_paper{ font-family: garamondpremrpro-smbd; text-align: center; margin-top:120px;}
+#desc_paper { font-family: garamondpremrpro-smbd; text-align: justify; line-height: 1.55; margin-top:100px;}
+#fonti_paper{ font-family: garamondpremrpro-smbd; text-align: left; margin-top:50px;}
+
+.type_popup
+    {
+    font-family: garamondpremrpro-it;
+    text-align: center;
+    color: black;
+    position: absolute;
+    left: 50%;
+    bottom: -5%;
+    transform: translate(-50%, -50%);
+    font-size:15px;
+    }

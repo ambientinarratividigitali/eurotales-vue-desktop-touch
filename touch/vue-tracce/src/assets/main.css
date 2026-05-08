@@ -92,12 +92,21 @@ html, body, #app {
   font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
   font-size: var(--fs-base);
   line-height: 1.45;
-  /* cursor: none; */
+   cursor: none; 
+  -webkit-touch-callout: none;     /* iOS: niente menu su long-press */
+  -webkit-user-select: none;       /* Safari */
+  -moz-user-select: none;          /* Firefox */
+  -ms-user-select: none;           /* Edge legacy */
+  user-select: none;               /* tutti gli altri */
 }
 
-/* *, *::before, *::after {
+ *, *::before, *::after {
   cursor: none !important;
-} */
+} 
+
+* {
+  -webkit-touch-callout: none;
+}
 
 a {
   color: inherit;

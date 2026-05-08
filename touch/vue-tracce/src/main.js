@@ -19,3 +19,6 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.mount('#app')
+
+// Blocca menu contestuale (long-press / tasto destro) su tutto il documento
+window.addEventListener('contextmenu', e => e.preventDefault())

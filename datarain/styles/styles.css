@@ -1,0 +1,632 @@
+
+
+ @font-face
+{
+font-family: "garamondpremrpro-it.otf";
+src: url("Fonts/garamondpremrpro-it.otf") format('opentype');
+}
+@font-face
+{
+font-family: "garamondpremrpro-it";
+src: url("Fonts/garamondpremrpro-smbd.otf") format('opentype');
+}
+
+@font-face
+{
+font-family: "PTSans-Regular";
+src: url("Fonts/PTSans-Regular.ttf") format('truetype');
+}
+@font-face
+{
+font-family: "PTSans-Bold";
+src: url("Fonts/garamondpremrpro-smbd.otf") format('opentype');
+}
+ @font-face
+{
+font-family: "garamondpremrpro-smbdit";
+src: url("Fonts/garamondpremrpro-smbd.otf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "garamondpremrpro";
+src: url("Fonts/garamondpremrpro-smbd.otf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "Montserrat-Regular";
+src: url("Fonts/Montserrat-Regular.otf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "garamondpremrpro_normal";
+src: url("Fonts/garamondpremrpro.otf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "KumbhSans-Black";
+src: url("Fonts/KumbhSans-Black.ttf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "Montserrat-BoldItalic";
+src: url("Fonts/Montserrat-BoldItalic.otf") format('opentype');
+}
+
+ @font-face
+{
+font-family: "Montserrat-Italic";
+src: url("Fonts/Montserrat-Italic.otf") format('opentype');
+}
+
+
+html, body {
+    font-family: 'Futura Condensed PT Medium';
+    width: 1920px;
+    height: 1080px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    font-size: 19px;
+    font-family: "Montserrat-Regular";
+    src: url(Fonts/Montserrat-Regular.ttf) format('truetype');
+    margin: 3px;
+
+}
+img.crediti {
+    z-index: 20;
+    position: absolute;
+    top: 184px;
+    left: 31px;
+}
+
+.subtitle{
+   font-size: 25pt;
+    font-style: italic;
+    color: #29CEAE;
+     text-align: center;
+   font-weight: normal;
+    text-transform: uppercase;
+    font-family: "Montserrat-BoldItalic";
+}
+
+
+
+ .title{
+
+    font-family: "KumbhSans-Black";
+    font-size: 35px;
+   text-align: center;
+   font-weight: normal;
+   text-transform: uppercase;
+
+
+}
+#container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #eaeaea;
+    width: 1920px;
+    height: 1080px;
+    background: url(../assets/Tracce_Background.png) center no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+.hide{
+display: none;
+
+
+}
+.drop {
+    position: absolute;
+    max-width: 40%;
+    
+    
+    top: -600px;
+    background-size: contain;
+    z-index: 1;
+    
+    
+
+    /*color: red;
+    font-size: 2em;*/
+}
+.drop.active {
+
+}
+.drop.active,
+.drop.snapped {
+    z-index: 9999;
+
+}
+.drop.active:before {
+    font-size: 0px;
+}
+
+
+
+
+
+
+.bubble::-webkit-scrollbar {
+    /* padding: 207px; */
+    /* margin: 205px; */
+    height: -63px;
+    width: 9px;
+    /* height: 208px; */
+}
+.bubble::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    /* width: 1px; */
+    -webkit-box-shadow: inset 0 0 6px rgb(0, 0, 0);
+    /* margin: 200px; */
+    height: 5px;
+}
+.bubble::-webkit-scrollbar {
+    width: -5px;
+    /* -webkit-box-shadow: inset 0 0 6px rgba(243, 237, 237, 0); */
+    /* color: #2f0202; */
+    /* margin: 200px; */
+    /* padding: 200px; */
+}
+.bubble {
+    font-family: "Montserrat-Regular" !important;
+    padding: 10px;
+    font-size: 23px !important;
+    position: relative;
+    top: 29px;
+    left: 42px!important;
+    border: 63px solid rgb(225 206 175 / 95%);
+    padding: 40px;
+    text-transform: none;
+    font-size: 19px;
+    z-index: 2000;
+    /* opacity: 51; */
+    background-color: rgba(225, 206, 175, 95%);
+    overflow-y: scroll;
+    width: 736px;
+    height: 839px;
+    padding: 30px;
+}
+.wrapper {
+    
+    
+    z-index: 9999;
+    min-height: 200px;
+    justify-content: space-between;
+}
+.wrapper .content {
+    text-align: left;
+    font-size: 23px;
+    z-index: 9999;
+}
+.wrapper .content {
+    text-align: center;
+    line-height: 1.2;
+    font-size:21px;
+}
+.space {
+    padding: 30px;
+}
+.sottotitolo {
+    font-size: 29px;
+    font-family: "garamondpremrpro-it";
+    font-style: italic;
+      padding-left: 28px;
+}
+.Firma {
+    font-family: "garamondpremrpro-it";
+    float: left;
+    font-style: italic;
+    padding-left: 108px;
+    font-weight: normal;
+    font-size: 23px;
+}
+.text {
+    text-align: left;
+}
+.text {
+    line-height: 1.4;
+    text-align: left;
+    width: 70%;
+    margin-left: 111px;
+       font-family: "Montserrat-Regular" !important;
+        font-size: 18pt  !important;
+}
+
+
+.small_text {
+    line-height: 1.3;
+    text-align: left;
+       font-family: "Montserrat-Regular" !important;
+        font-size: 14pt  !important;
+}
+
+.Autore_text{
+    line-height: 1.3;
+    text-align: right;
+       font-family: "Montserrat-Regular" !important;
+        font-size: 14pt  !important;
+}
+
+img#close {
+    z-index: 10000;
+}
+
+#close {
+    float: right;
+    */: ;
+    position: fixed;
+    right: 136px;
+    /* overflow: hidden; */
+    z-index: 119;
+    height: 35px;
+    background-color: transparent;
+    border: navajowhite;
+    /* width: 17px; */
+    font-size: 23px;
+    color: black;
+}
+#close1 {
+    float: right;
+    */: ;
+    top: 100px;
+    position: fixed;
+    left: 820px;
+    /* overflow: hidden; */
+    z-index: 119;
+    height: 58px;
+    background-color: transparent;
+    border: navajowhite;
+    /* width: 17px; */
+    font-size: 23px;
+    color: black;
+    opacity: .7;
+}
+#close3 {
+    float: right;
+    */: ;
+right: 590px;
+    top: 79px;
+    position: fixed;
+    /* overflow: hidden; */
+    z-index: 119;
+    height: 57px;
+    background-color: transparent;
+    border: navajowhite;
+    /* width: 17px; */
+    font-size: 23px;
+    color: black;
+}
+
+ #close7 {
+    float: right;
+    */: ;
+    /* right: 879px; */
+    top: 89px;
+    position: fixed;
+    /* overflow: hidden; */
+    z-index: 119;
+    height: 57px;
+    background-color: transparent;
+    border: navajowhite;
+    /* width: 17px; */
+    font-size: 23px;
+    color: black;
+}
+
+
+#close2, #close4, #close5, #close6 {
+    float: right;
+    */: ;
+    right: 879px;
+    top: 61px;
+    position: fixed;
+    /* overflow: hidden; */
+    z-index: 119;
+    height: 57px;
+    background-color: transparent;
+    border: navajowhite;
+    /* width: 17px; */
+    font-size: 23px;
+    color: black;
+
+}
+img#Focus1 {
+    width: 280px;
+    /* z-index: 2000000; */
+    top: auto;
+    bottom: 2px;
+    /* float: right; */
+    position: fixed;
+    top: 690px;
+    left: 530px;
+}
+img#Focus2 {
+    position: fixed;
+    width: 280px; 
+    top: 470px;
+    left: 300px;
+}
+img#Focus3 {
+    position: relative;
+    width: 290px;
+    left: 40px;
+    z-index: 100;
+    top: 280px;
+}
+img#Focus4 {
+    position: fixed;
+     /* width: 313px;*/
+    top: 273px;
+    left: 532px;
+}
+img#Focus5 {
+    position: fixed;
+   /* width: 319px;*/
+    top: 710px;
+    left: 70px;
+}
+
+#bubble_red1 {
+    position: relative;
+    /* top: 22px; */
+    left: 10px !important;
+    float: none;
+    /* border: 63px solid rgb(104,11,35); */
+    padding: 0px !important;
+    text-transform: none;
+    font-size: 19px;
+    z-index: 2000;
+    /* opacity: 51; */
+      background-image: url(/datarain/assets/MappaTracceFullscreen.png);
+    background-color: rgb(54 92 66);
+
+  
+    width: 98%;
+    height: 96%;
+    padding: 30px;
+    font-family: PTSans-Regular;
+}
+
+
+div#bubble_redin {
+    width: 29%;
+    height: 90%;
+    float: right;
+    background: rgb(54 92 66);
+    padding: 57px;
+    overflow: hidden;
+}
+
+#crediti_bubble {
+    position: relative;
+    /* top: 22px; */
+    left: 19px !important;
+    float: none;
+    border: 63px solid rgb(104,11,35);
+    padding: 0px !important;
+    text-transform: none;
+    overflow: scroll;
+
+    overflow-x: hidden;
+    font-size: 19px;
+    z-index: 2000;
+    /* opacity: 51; */
+    border: 63px solid rgb(63 61 59 / 0%);
+    background-color: rgb(63 61 59 / 92%);
+    width: 91%;
+    height: 83%;
+    padding: 30px;
+    font-family: PTSans-Regular;
+}
+
+#bubble_red,  #bubble_red2, #bubble_red3, #bubble_red4{
+    position: relative;
+    top: 22px;
+    float: right;
+    left: -39px!important;
+    border: 63px solid rgb(104,11,35);
+    padding: 40px;
+    text-transform: none;
+    font-size: 19px;
+    z-index: 2000;
+    /* opacity: 51; */
+    background-color: rgb(104,11,35);
+    overflow-y: scroll;
+    width: 736px;
+    height: 839px;
+    padding: 30px;
+    font-family: PTSans-Regular;
+}
+
+
+div#bubble_red::-webkit-scrollbar,  div#bubble_red2::-webkit-scrollbar, div#bubble_red3::-webkit-scrollbar, div#bubble_red4::-webkit-scrollbar, div#crediti_bubble::-webkit-scrollbar {
+    width: 5px;
+    background: #f1c5c15e;
+}
+div#bubble_red::-webkit-scrollbar-thumb,  div#bubble_red2::-webkit-scrollbar-thumb, div#bubble_red3::-webkit-scrollbar-thumb, div#bubble_red4::-webkit-scrollbar-thumb {
+    /* color: rebeccapurple; */
+    background: #f0d6d48f;
+    border-radius: 0px;
+    height: -webkit-fill-available;
+}
+
+
+.sottotitolo_red {
+    font-size: 29px;
+    font-family: "garamondpremrpro-it";
+    font-style: italic;
+    padding-left: 28px;
+    color: white;
+    margin-bottom: 24px
+}
+.title_red {
+
+    text-align: center;
+    font-family: "KumbhSans-Black";
+    font-size: 35px;
+    padding-top: 15px;
+    text-transform: uppercase;
+    color: #e2e2e2;
+    font-weight: bold;
+   }
+.text_red {
+    margin-right: 30px;
+    text-align: left;
+    /* margin-left: 111px; */
+       color: #e2e2e2;
+    font-family: "Montserrat-Regular";
+        font-size: 21pt;
+        line-height: 1.6;
+}
+
+
+.title_red_crediti {
+
+    text-align: center;
+    font-family: "KumbhSans-Black";
+    font-size: 35px;
+    padding-top: 15px;
+    text-transform: uppercase;
+    color: #e2e2e2;
+    font-weight: bold;
+   }
+.text_red_crediti {
+margin-right: 30px;
+    text-align: left;
+    /* margin-left: 111px; */
+    color: #e2e2e2;
+    font-family: "Montserrat-Regular" !important;
+    font-size: 21pt;
+    line-height: 1.6;
+}
+
+
+
+
+
+
+
+.text_red mi
+{
+    font-size: 21pt;
+}
+.space_small {
+    padding: 7px;
+
+}
+.Firma_red {
+    font-family: "garamondpremrpro-it";
+    float: left;
+    font-style: italic;
+    padding-left: 108px;
+    font-weight: normal;
+    font-size: 23px;
+    color: #ffffffa3;
+}
+.Fonti_red {
+color: #e2e2e2;
+    width: 100%;
+    margin-top: 70px;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+    font-family: "garamondpremrpro-light.otf";
+}
+
+.Fonte {
+
+
+width: 100%;
+    margin-top: 70px;
+    float: left;
+    text-align: center;
+    font-size: 18px;
+     font-family: "Montserrat-Regular"!important;
+
+
+
+
+}
+.Fonte mi
+{
+ font-size: 18px;
+
+  font-family: "Montserrat-Regular";
+  font-style: italic;   
+}
+
+
+.Fonti_red mi
+{
+font-style: italic;
+    font-size: 19px;
+    font-family: "garamondpremrpro-it.otf"; 
+}
+
+mi
+{
+     /* font-family: "PTSans-It"; */
+    font-style: italic;
+    font-size: 21px;
+    font-family: "Montserrat-Regular";
+}
+
+cit
+{
+    color:#e2e2e2;
+ font-size: 17px;
+ font-family: "PTSans-Regular";
+}
+cit::before {content: '"';
+opacity: .6;
+margin-bottom: -110px;
+    font-size: 160px;
+    display: block;
+    text-align: left;}
+
+cit::after {content: '"';
+opacity: .6;
+margin-bottom: -85px;
+margin-top:-50px;
+    font-size: 160px;
+    display: block;
+    text-align: right;}
+
+
+citi
+{
+
+    color: #e2e2e2;
+    font-size: 17px;
+    font-family: "PTSans-Regular";
+    font-style: italic;
+}
+div.bubble::-webkit-scrollbar {
+    width: 5px;
+    background: #e4e4e459;
+}
+div.bubble::-webkit-scrollbar-thumb {
+    /* color: rebeccapurple; */
+     -webkit-box-shadow: inset 0px 0px 0px 0px rgb(0, 0, 0);
+    background: #e2e2e2;
+    border-radius: 0px;
+    height: -webkit-fill-available;
+}
+i{
+    font-family: "Montserrat-Italic";
+    font-size: 14pt;
+   
+}
+i21{
+    font-family: "Montserrat-Italic";
+    font-size: 18pt;
+    font-style: italic; 
+}
