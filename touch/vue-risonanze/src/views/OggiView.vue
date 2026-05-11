@@ -160,6 +160,7 @@ function buildLinguaChart(data) {
   const groups = {}
   data.forEach(d => {
     const lingua = langName(d.lingua_madre)
+    if (lingua === 'N/D') return
     const color = d.lingua_madre?.colore || d.lingua_madre?.colors || '#888'
     if (!groups[lingua]) groups[lingua] = { count: 0, color }
     groups[lingua].count++
