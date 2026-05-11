@@ -115,7 +115,7 @@ html, body, #app {
   text-rendering: optimizeLegibility;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  /* cursor: none; */
+  cursor: none;
   -webkit-touch-callout: none;     /* iOS: niente menu su long-press */
   -webkit-user-select: none;       /* Safari */
   -moz-user-select: none;          /* Firefox */
@@ -124,7 +124,7 @@ html, body, #app {
 }
 
 *, *::before, *::after {
-  /* cursor: none !important; */
+  cursor: none !important;
 }
 
 * {
