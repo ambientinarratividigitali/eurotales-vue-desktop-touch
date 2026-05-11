@@ -56,12 +56,12 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
   padding: var(--sp-3) var(--sp-5);
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-  height: clamp(200px, 13vh, 400px);
+  height: clamp(260px, 17vh, 520px);
   flex-shrink: 0;
 }
 
 .logo-link {  align-items: center; height: 100%; }
-.logo { height: 80%; max-height: 130px; }
+.logo { height: 80%; max-height: 170px; }
 
 .filtrilingua-lingue{
   display: flex;
@@ -81,7 +81,7 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(28px, 2.8vw, 106px);
+  font-size: clamp(36px, 3.6vw, 138px);
   font-weight: 700;
   color: var(--rosso);
   letter-spacing: 0.05em;
@@ -91,7 +91,7 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
 
 .instruction {
   flex: 1;
-  font-size: clamp(14px, 1.2vw, 24px);
+  font-size: clamp(18px, 1.6vw, 31px);
   color: var(--grigio-mid);
   font-style: italic;
   text-align: center;
@@ -110,7 +110,7 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
 }
 
 .legend-label-prefix {
-  font-size: clamp(13px, 1.1vw, 22px);
+  font-size: clamp(17px, 1.4vw, 29px);
   font-weight: 600;
   color: var(--grigio-mid);
   text-transform: uppercase;
@@ -120,16 +120,16 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: clamp(13px, 1.1vw, 22px);
+  gap: 10px;
+  font-size: clamp(17px, 1.4vw, 29px);
   color: var(--grigio-dark);
   font-weight: 500;
   white-space: nowrap;
 }
 
 .legend-dot {
-  width: clamp(18px, 1.5vw, 30px);
-  height: clamp(18px, 1.5vw, 30px);
+  width: clamp(24px, 2vw, 39px);
+  height: clamp(24px, 2vw, 39px);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -139,12 +139,12 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  padding: clamp(14px, 1.2vw, 22px) clamp(20px, 2vw, 40px);
-  min-height: clamp(60px, 5.5vw, 96px);
+  padding: clamp(18px, 1.6vw, 29px) clamp(26px, 2.6vw, 52px);
+  min-height: clamp(78px, 7vw, 125px);
   background: var(--rosso);
   color: white;
   border-radius: var(--radius-lg);
-  font-size: clamp(15px, 1.3vw, 26px);
+  font-size: clamp(20px, 1.7vw, 34px);
   font-family: var(--font-body);
   font-weight: 700;
   letter-spacing: 0.04em;

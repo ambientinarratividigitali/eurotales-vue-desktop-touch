@@ -82,16 +82,13 @@ const ZOOM_INITIAL = 0
 const currentZoom = ref(ZOOM_INITIAL)
 const pxPerYear = computed(() => ZOOM_PX_PER_YEAR[currentZoom.value])
 
-const yearMin = computed(() => {
-  if (!props.events.length) return 0
-  return Math.min(...props.events.map(e => Number(e.anno)))
-})
-const yearMax = computed(() => {
-  if (!props.events.length) return 0
-  return Math.max(...props.events.map(e => Number(e.anno)))
-})
+const TIMELINE_YEAR_MIN = 400
+const TIMELINE_YEAR_MAX = 2100
 
-const PAD_YEARS = 20
+const yearMin = computed(() => TIMELINE_YEAR_MIN)
+const yearMax = computed(() => TIMELINE_YEAR_MAX)
+
+const PAD_YEARS = 0
 
 const trackWidth = computed(() => {
   const span = (yearMax.value - yearMin.value) + 2 * PAD_YEARS
