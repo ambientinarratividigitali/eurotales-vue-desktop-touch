@@ -195,13 +195,18 @@ function buildMap() {
   if (leafletMap) return
   leafletMap = L.map(mapEl.value, {
     center: [51, 12],
-    zoom: 5.5,                    // più zoomato di prima (era 5)
+    zoom: 5.5,                  
     minZoom: 5.5,
     maxZoom: 18,
     
     zoomControl: false,
     tap: true,
-    tapTolerance: 25,           // tap target più tollerante per dito
+    tapTolerance: 25,           
+    maxBounds: [
+      [30, -25],   // angolo sud-ovest (Marocco / Atlantico)
+      [72,  45],   // angolo nord-est (Mar Bianco / Urali)
+    ],
+    maxBoundsViscosity: 1.0,
   })
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 })
     .addTo(leafletMap)
@@ -272,7 +277,7 @@ watch(() => store.tracceMappa, rebuildMarkers)
         <span class="accordion-icon" :class="{ rotate: accordionOpen }">+</span>
       </button>
       <div class="accordion-content" :class="{ open: accordionOpen }">
-        <h3 class="legend-title">{{ t('mappa.legendTitle') }}</h3>
+        <h3 class="legend-title" v-html="t('mappa.legendTitle')"></h3>
         <p>{{ t('mappa.legendBody') }}</p>
         <p>{{ t('mappa.legendBody2') }}</p>
         <p>{{ t('mappa.legendBody3') }}</p>
@@ -306,10 +311,20 @@ watch(() => store.tracceMappa, rebuildMarkers)
         <div v-if="popupLoading" class="loader panel-loader"></div>
 
         <template v-else-if="popupDetail">
+          <h2 class="panel-title">{{ popupTitle }}</h2>
           <img v-if="imgUrl(popupDetail)" :src="imgUrl(popupDetail)"
                :alt="popupTitle" class="panel-cover" />
 
-          <h2 class="panel-title">{{ popupTitle }}</h2>
+
+          <!-- TABELLA INFO -->
+          <table v-if="infoRows.length" class="info-table">
+            <tbody>
+              <tr v-for="(row, i) in infoRows" :key="i">
+                <td class="info-label"><strong>{{ row.k }}:</strong></td>
+                <td class="info-value">{{ row.v }}</td>
+              </tr>
+            </tbody>
+          </table>
 
           <!-- ═ ISCRIZIONI raggruppate in un unico blocco ═════════ -->
           <div v-if="iscrizioni.length" class="accordion-item">
@@ -396,16 +411,6 @@ watch(() => store.tracceMappa, rebuildMarkers)
             </div>
           </div>
 
-          <!-- TABELLA INFO -->
-          <table v-if="infoRows.length" class="info-table">
-            <tbody>
-              <tr v-for="(row, i) in infoRows" :key="i">
-                <td class="info-label"><strong>{{ row.k }}:</strong></td>
-                <td class="info-value">{{ row.v }}</td>
-              </tr>
-            </tbody>
-          </table>
-
           <!-- META autori -->
           <div class="meta-block">
             <p v-if="popupDetail.autore_scheda">
@@ -430,7 +435,7 @@ watch(() => store.tracceMappa, rebuildMarkers)
 /* ── Fullscreen ─────────────────────────────────────────────────── */
 .mappa-fullscreen {
   position: fixed;
-  inset: var(--header-h) 0 0 0;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -450,10 +455,10 @@ watch(() => store.tracceMappa, rebuildMarkers)
   font-size: var(--fs-lg) !important;
 }
 
-/* ── Accordion legenda (sx) ─────────────────────────────────────── */
+/* ── Legenda (sx) — sotto l'header trasparente ─────────────────── */
 .accordion-container {
   position: absolute;
-  top: var(--sp-4);
+  top: calc(var(--header-h) + var(--sp-4));
   left: var(--sp-4);
   z-index: 1200;
   width: clamp(360px, 22%, 560px);
@@ -467,19 +472,29 @@ watch(() => store.tracceMappa, rebuildMarkers)
 
 .accordion-toggle {
   width: 100%;
-  background: var(--accent-deep);
-  color: white;
-  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #912B3D;
+  border: 2px solid #912B3D;
   border-radius: var(--radius-lg);
   padding: var(--sp-4) var(--sp-5);
   font-size: var(--fs-md);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 16px rgba(145, 43, 61, 0.18);
   min-height: var(--tap-large);
   cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+.accordion-toggle:active { transform: scale(0.98); }
+.accordion-container:not(.is-open) .accordion-toggle:hover {
+  background: #912B3D;
+  color: white;
 }
 
 .accordion-icon {
@@ -487,18 +502,22 @@ watch(() => store.tracceMappa, rebuildMarkers)
   transition: transform 0.3s;
   display: inline-block;
   margin-left: var(--sp-3);
+  line-height: 1;
 }
 .accordion-icon.rotate { transform: rotate(45deg); }
 
 .accordion-content {
   margin-top: var(--sp-3);
-  background: rgba(251, 243, 234, 0.97);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(145, 43, 61, 0.18);
   border-radius: var(--radius-lg);
   padding: 0;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease, padding 0.3s ease;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
   color: var(--text);
 }
 .accordion-content.open {
@@ -507,26 +526,29 @@ watch(() => store.tracceMappa, rebuildMarkers)
   overflow-y: auto;
 }
 .legend-title {
-  font-size: var(--fs-lg);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: var(--fs-base);
   text-align: center;
-  text-decoration: underline;
-  margin-top: 0;
-  color: var(--text);
+  text-decoration: none;
+  margin: 0 0 var(--sp-3);
+  color: #912B3D;
+  font-weight: 700;
 }
 .accordion-content p {
   text-align: justify;
   margin: var(--sp-3) 0;
   font-size: var(--fs-base);
-  line-height: 1.5;
+  line-height: 1.55;
+  color: var(--text);
 }
 
 /* ── Sidebar lista marker (dx) ──────────────────────────────────── */
 .marker-list {
   position: absolute;
-  top: var(--sp-4);
+  top: calc(var(--header-h) + var(--sp-4));
   right: var(--sp-4);
   width: clamp(380px, 24%, 600px);
-  max-height: calc(100% - var(--sp-7));
+  max-height: calc(100vh - var(--header-h) - var(--sp-7));
   overflow-y: auto;
   z-index: 1000;
   border-radius: var(--radius);
@@ -592,13 +614,13 @@ watch(() => store.tracceMappa, rebuildMarkers)
 /* ── Pannello scheda GRANDE (sx) ────────────────────────────────── */
 .scheda-panel {
   position: absolute;
-  top: 0;
+  top: var(--header-h);
   left: 0;
   bottom: 0;
   width: clamp(560px, 48%, 1100px);
-  background: rgba(251, 243, 234, 0.97);
+  background: rgba(251, 243, 234, 0.4);
   backdrop-filter: blur(12px);
-  z-index: 1500;
+  z-index: 2500;
   overflow-y: auto;
   padding: var(--sp-6) var(--sp-6) var(--sp-7);
   box-shadow: 6px 0 32px rgba(0,0,0,0.22);
@@ -746,6 +768,8 @@ watch(() => store.tracceMappa, rebuildMarkers)
 
 /* ── Tabella info ───────────────────────────────────────────────── */
 .info-table {
+  display: block;          
+  padding: 20px;
   border-collapse: collapse;
   width: 100%;
   background: var(--bg-card);
@@ -753,8 +777,9 @@ watch(() => store.tracceMappa, rebuildMarkers)
   overflow: hidden;
   margin-top: var(--sp-5);
 }
+
 .info-table td {
-  padding: var(--sp-3) var(--sp-4);
+  
   border: none;
   vertical-align: top;
   font-size: var(--fs-base);

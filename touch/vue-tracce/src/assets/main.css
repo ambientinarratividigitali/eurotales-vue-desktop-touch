@@ -27,7 +27,7 @@ a {
   --bg-pagina:     #fbf3ea;   /* sfondo crema dell'originale */
   --bg-card:       #dbd3c8;   /* bg item-card / table */
   --bg-card-hover: #d2c8b8;
-  --bg-card-soft:  rgba(251, 243, 234, 0.9);
+  --bg-card-soft:  rgba(251, 243, 234, 0.8);
 
   --accent:        burlywood;
   --accent-strong: rgb(177, 147, 108);
@@ -71,7 +71,7 @@ a {
   --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.25);
 
   /* — Header / Footer altezze — */
-  --header-h:  clamp(72px, 7vh, 110px);
+  --header-h: clamp(360px, 24vh, 730px);
   --footer-h:  clamp(48px, 5vh, 80px);
 
   /* — Touch target minimi: dito sul 55" — */
@@ -92,7 +92,7 @@ html, body, #app {
   font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
   font-size: var(--fs-base);
   line-height: 1.45;
-   cursor: none; 
+  /*cursor: none; */
   -webkit-touch-callout: none;     /* iOS: niente menu su long-press */
   -webkit-user-select: none;       /* Safari */
   -moz-user-select: none;          /* Firefox */
@@ -101,7 +101,7 @@ html, body, #app {
 }
 
  *, *::before, *::after {
-  cursor: none !important;
+  /*cursor: none !important;*/
 } 
 
 * {
@@ -139,7 +139,7 @@ html {
   :root {
     --tap-min:   88px;
     --tap-large: 120px;
-    --header-h:  120px;
+    --header-h:  320px;
   }
 }
 

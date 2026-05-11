@@ -6,7 +6,6 @@
   />
 </template>
 <style>
-.logo { height: clamp(40px, 4vw, 110px); }
-</style>
+.logo { height: clamp(140px, 11vh, 320px); max-height: 80%; }</style>
 <script>
 </script>

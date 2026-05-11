@@ -42,7 +42,6 @@ onBeforeUnmount(() => {
 <style scoped>
 .page-main {
   width: 100%;
-  height: calc(100vh - var(--header-h));
-  overflow: hidden;
+  min-height: 100vh;
 }
 </style>

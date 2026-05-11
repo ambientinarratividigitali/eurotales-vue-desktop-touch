@@ -13,7 +13,7 @@ export default {
     unknownCity:      'Città sconosciuta',
   },
   scheda: {
-    inscription:      'Iscrizione',
+    inscription:      'Tracce',
     italianTrans:     'Traduzione italiana',
     englishTrans:     'Traduzione inglese',
     description:      'Descrizione',
@@ -37,7 +37,7 @@ export default {
   },
   mappa: {
     legend:           '📍 Legenda',
-    legendTitle:      'Le Tracce: luoghi, monumenti e opere d\'arte con una memoria linguistica',
+    legendTitle:      'Le Tracce<br>Luoghi, monumenti e opere d\'arte con una memoria linguistica',
     legendBody:
       'Le Tracce sono segni tangibili della presenza delle lingue in Europa, conservate in luoghi, monumenti e opere d\'arte. Ogni Traccia rappresenta un legame unico tra un oggetto materiale e la sua dimensione immateriale: la storia culturale e linguistica che porta con sé.',
     legendBody2:

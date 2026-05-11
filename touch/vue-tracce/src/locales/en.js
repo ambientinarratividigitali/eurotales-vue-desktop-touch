@@ -13,7 +13,7 @@ export default {
     unknownCity:      'Unknown city',
   },
   scheda: {
-    inscription:      'Inscription',
+    inscription:      'Traces',
     italianTrans:     'Italian translation',
     englishTrans:     'English translation',
     description:      'Description',
@@ -37,7 +37,7 @@ export default {
   },
   mappa: {
     legend:           '📍 Legend',
-    legendTitle:      'The Traces: places, monuments and artworks with linguistic memory',
+    legendTitle:      'The Traces<br>Places, monuments and artworks with linguistic memory',
     legendBody:
       'Traces are tangible signs of the presence of languages in Europe, preserved in places, monuments and artworks. Each Trace represents a unique connection between a material object and its immaterial dimension: the cultural and linguistic history it carries.',
     legendBody2:

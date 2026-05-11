@@ -1,5 +1,4 @@
 <script setup>
-/* PageHeader — barra trasparente con titolo + selettore lingua (touch friendly) */
 import { useI18n } from 'vue-i18n'
 import Logo from './Logo.vue'
 
@@ -14,13 +13,20 @@ function setLocale(l) {
 <template>
   <header class="page-header">
     <div class="hdr-inner">
-      <Logo />
+      <a href="https://eurotales.eu" class="logo-link">
+        <Logo />
+      </a>
+
       <h1 class="hdr-title">{{ t('app.title') }}</h1>
 
       <div class="lang-switch" role="group" aria-label="language">
-        <button :class="['lang-btn', { active: locale === 'it' }]" @click="setLocale('it')">IT</button>
-        <span class="lang-sep">|</span>
-        <button :class="['lang-btn', { active: locale === 'en' }]" @click="setLocale('en')">EN</button>
+        <button
+          v-for="loc in ['it', 'en']"
+          :key="loc"
+          class="lang-btn"
+          :class="{ active: locale === loc }"
+          @click="setLocale(loc)"
+        >{{ loc.toUpperCase() }}</button>
       </div>
     </div>
   </header>
@@ -28,13 +34,17 @@ function setLocale(l) {
 
 <style scoped>
 .page-header {
-  background: rgba(251, 243, 234, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(204, 204, 204, 0.35);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 2000;
+  height: var(--header-h);
+  background: rgba(251, 243, 234, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .hdr-inner {
@@ -43,42 +53,55 @@ function setLocale(l) {
   justify-content: space-between;
   gap: var(--sp-5);
   padding: var(--sp-3) var(--sp-6);
-  min-height: var(--header-h);
+  height: 100%;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
 }
 
 .hdr-title {
+  flex: 1;
+  text-align: center;
   margin: 0;
-  font-size: var(--fs-xl);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(36px, 3.6vw, 138px);
   font-weight: 700;
-  color: var(--text);
+  color: #912B3D;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .lang-switch {
   display: flex;
-  align-items: center;
   gap: var(--sp-2);
+  flex-shrink: 0;
 }
 
 .lang-btn {
-  background: transparent;
-  border: none;
-  font-size: var(--fs-md);
+  padding: 0.6em 1.4em;
+  min-height: clamp(62px, 5.5vw, 99px);
+  min-width: clamp(73px, 6.5vw, 117px);
+  border-radius: 9999px;
+  font-size: clamp(17px, 1.6vw, 29px);
   font-weight: 700;
+  letter-spacing: 0.06em;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid transparent;
   color: var(--text-muted);
-  padding: var(--sp-2) var(--sp-4);
-  border-radius: var(--radius);
-  min-width: var(--tap-large);
-  min-height: var(--tap-large);
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
-.lang-btn:active { background: rgba(0,0,0,0.06); }
 .lang-btn.active {
-  color: var(--accent-strong);
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 6px;
+  background: #912B3D;
+  color: white;
+  border-color: #912B3D;
+  box-shadow: 0 3px 10px rgba(145, 43, 61, 0.35);
 }
-.lang-sep { color: var(--border); font-size: var(--fs-md); }
+.lang-btn:active { transform: scale(0.96); }
 </style>
