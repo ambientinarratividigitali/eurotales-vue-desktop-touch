@@ -1,6 +1,7 @@
 <template>
   <PageLayout domain="ieri" @back="goBack">
     <header class="top-bar">
+      <Logo/>
       <h1 class="page-title is-ieri">{{ titoloDinamico?.toUpperCase() }}</h1>
       <div class="header-actions">
       </div>
@@ -40,7 +41,9 @@
       <!-- DESTRA: scheda biografica -->
       <section class="right-panel">
         <div class="info-scroll thin-scroll">
+          
           <div class="info-block">
+            <span class="info-row-title">{{t('persona.bioTitle')}}</span>
             <InfoRow v-if="persona.date_nascita" :label="t('ieri.fields.dataNascita')" :value="persona.date_nascita" />
             <InfoRow v-if="luogoNascita" :label="t('ieri.fields.luogoNascita')" :value="formatLuogo(luogoNascita)" />
             <InfoRow v-if="persona.data_morte" :label="t('ieri.fields.dataMorte')" :value="persona.data_morte" />
@@ -48,8 +51,9 @@
             <InfoRow v-if="attivita.length" :label="t('ieri.fields.attivita')" :value="attivita.join(', ')" />
             <InfoRow v-if="luoghiResidenza.length" :label="t('ieri.fields.luogoResidenza')" :value="luoghiResidenza.join(', ')" />
           </div>
-
+          
           <div class="info-block">
+            <span class="info-row-title">{{ t('persona.lingueTitle') }}</span>
             <InfoRow v-if="linguaMadre" :label="t('ieri.fields.linguaMadre')" :value="linguaMadre" />
             <InfoRow v-if="lingueQuotidiane.length" :label="t('ieri.fields.linguaQuotidiana')" :value="lingueQuotidiane.join(', ')" />
             <InfoRow v-if="lingueScuola.length" :label="t('ieri.fields.linguaScuola')" :value="lingueScuola.join(', ')" />
@@ -57,7 +61,7 @@
             <InfoRow v-if="lingueApprese.length" :label="t('ieri.fields.altrelingue')" :value="lingueApprese.join(', ')" />
             <InfoRow v-if="areaLinguistica" :label="t('ieri.fields.areaLinguistica')" :value="areaLinguistica" />
           </div>
-
+          
           <div class="info-block testo" v-if="bioDinamica">
             <p v-html="bioDinamica"></p>
           </div>
@@ -97,6 +101,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useDataStore } from '../stores/dataStore.js'
 import PageLayout from '../components/PageLayout.vue'
+import Logo from '../components/Logo.vue'
+import { inferRuntimeType } from 'vue/compiler-sfc'
 
 const route   = useRoute()
 const router  = useRouter()
@@ -341,6 +347,7 @@ function goBack() { router.push({ name: 'ieri' }) }
   overflow: hidden;
   border-left: 1px solid var(--w-12);
   padding-left: var(--sp-4);
+  padding-top: var(--sp-4);
   min-height: 0;
 }
 
@@ -363,9 +370,22 @@ function goBack() { router.push({ name: 'ieri' }) }
   gap: 4px var(--sp-3);
   margin-bottom: var(--sp-2);
   font-size: var(--fs-base);
-  line-height: 1.5;
+  line-height: 1.1;
   align-items: baseline;
 }
+
+.info-row-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--sp-3);
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
 .lbl {
   color: var(--w-65);
   flex-shrink: 0;

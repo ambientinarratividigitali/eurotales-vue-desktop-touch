@@ -25,7 +25,7 @@ const API = 'https://www.directuseurotales.ambientinarratividigitali.it'
 const CACHE_TTL_HOURS = 24
 
 /** Incrementa per invalidare manualmente la cache di tutti gli utenti. */
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2
 
 const CACHE_KEYS = {
   ieri: 'risonanze.ieri',

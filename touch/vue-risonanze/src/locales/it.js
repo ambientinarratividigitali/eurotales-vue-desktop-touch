@@ -28,7 +28,7 @@ export default {
     nationLabel: 'Nazioni d\'Europa',
     personaggi: 'personaggi',
     biografie: 'biografie',
-    tabLingue: 'Tabella delle LINGUE →',
+    tabLingue: 'Tabella delle LINGUE',
     cerca: 'Cerca una persona',
     everyColor: 'Ogni colore corrisponde all\'area in cui sono collocate le',
     clickToDiscover: '<br>Clicca per scoprire le lingue che risuonano in ciascuna',
@@ -62,7 +62,7 @@ export default {
     title: 'Risonanze di Oggi',
     chartTitle: 'Fasce di età',
     totalData: 'Set Totale di dati:<br>',
-    totalCount: 'Set di dati totale',
+    totalCount: 'Set Totale di dati',
     viewing: 'Stai visualizzando il: {perc}% del totale',
     ages: {
       '11-18': '11-18 anni',
@@ -89,4 +89,8 @@ export default {
     noResults: 'Nessun risultato trovato.',
     total: 'Totale',
   },
+  persona: {
+    bioTitle: 'Biografia',
+    lingueTitle: 'Lingue',
+  }
 }

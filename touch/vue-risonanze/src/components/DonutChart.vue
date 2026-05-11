@@ -298,7 +298,7 @@ canvas {
 .chart-legend {
   list-style: none;
   margin: 0;
-  padding: var(--sp-2);
+  padding: var(--sp-5);
   overflow-y: auto;
   display: flex;
   flex-direction: column;

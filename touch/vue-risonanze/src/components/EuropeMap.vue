@@ -65,7 +65,7 @@ const countries = computed(() => europePaths)
 const COLOR = {
   oggi: { empty: '#2b917f80', full: '#2B917F', selected: '#DBB971' }, 
   
-  ieri: { empty: '#1a1a1a55', full: '#0e0c0a',  selected: '#912B3D' }, 
+  ieri: { empty: '#1a1a1a55', full: '#333',  selected: '#912B3D' }, 
 }
 
 function inDictionary(id) {

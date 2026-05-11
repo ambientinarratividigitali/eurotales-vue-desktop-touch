@@ -51,7 +51,7 @@ import DonutChart from '../components/DonutChart.vue'
 import EuropeMap from '../components/EuropeMap.vue'
 import PageLayout from '../components/PageLayout.vue'
 import logo from '../components/Logo.vue'
-
+import { watch } from 'vue'
 const router = useRouter()
 const { t, locale } = useI18n()
 const store = useDataStore()
@@ -68,6 +68,16 @@ const oggiData = computed(() => store.risonanzeOggi)
 
 onMounted(() => store.fetchOggi())
 
+
+watch(
+  () => store.risonanzeOggi.length,
+  (len) => {
+    if (len === 0) return
+    const allEtas = [...new Set(store.risonanzeOggi.map(d => d.eta))]
+    console.log('ETA distinti:', allEtas)
+    console.log('Esempio record:', store.risonanzeOggi[0])
+  }
+)
 // Restituisce il nome lingua nella locale corrente leggendo i campi dal DB
 function langName(linguaObj) {
   if (!linguaObj) return 'N/D'
@@ -120,7 +130,7 @@ const currentSet = computed(() => {
     )
   }
   if (selectedAge.value) {
-    return oggiData.value.filter(d => d.eta === selectedAge.value)
+    return oggiData.value.filter(d => d.eta?.replace(' ', '') === selectedAge.value)
   }
   return oggiData.value
 })

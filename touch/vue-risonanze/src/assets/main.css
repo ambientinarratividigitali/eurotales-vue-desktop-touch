@@ -115,7 +115,7 @@ html, body, #app {
   text-rendering: optimizeLegibility;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  cursor: none;
+  /* cursor: none; */
   -webkit-touch-callout: none;     /* iOS: niente menu su long-press */
   -webkit-user-select: none;       /* Safari */
   -moz-user-select: none;          /* Firefox */
@@ -124,7 +124,7 @@ html, body, #app {
 }
 
 *, *::before, *::after {
-  cursor: none !important;
+  /* cursor: none !important; */
 }
 
 * {
@@ -187,31 +187,37 @@ img { max-width: 100%; height: auto; }
 
 /* ── Top bar standard delle pagine ───────────────────────────────── */
 .top-bar {
+  display: grid;
+  /* Creiamo 3 colonne: 
+     la prima e l'ultima prendono lo stesso spazio (1fr), 
+     quella centrale si adatta al testo (auto) */
+  grid-template-columns: 1fr auto 1fr; 
+  align-items: center;
+  
   position: relative;
   z-index: var(--z-header);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: var(--sp-3) var(--sp-4);
   background-color: var(--bg-map); 
   gap: var(--sp-2);
 }
 
 .page-title {
+  grid-column: 2; /* Forza il titolo nella colonna centrale */
+  text-align: center;
   font-family: var(--font-display);
   font-size: var(--fs-xl);
   font-weight: 600;
-  letter-spacing: 0.02em;
-  flex: 1;
-  text-align: center;
+  margin: 0;
+  white-space: nowrap; /* Evita che il titolo vada a capo */
 }
 .page-title.is-ieri { color: var(--rosso); }
 .page-title.is-oggi { color: var(--verde); }
 
 .header-actions {
+  grid-column: 3;
+  justify-self: end; /* Spinge il contenitore dei bottoni tutto a destra */
   display: flex;
   gap: var(--sp-2);
-  flex-shrink: 0;
 }
 
 /* ── Etichetta panel (descrittore sopra grafici/mappe) ───────────── */

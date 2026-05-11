@@ -29,13 +29,13 @@ export default {
     nationLabel: 'Nations of Europe',
     personaggi: 'figures',
     biografie: 'biographies',
-    tabLingue: 'LANGUAGES table →',
+    tabLingue: 'LANGUAGES table',
     cerca: 'Search a person',
     everyColor: 'Each color corresponds to the area where the',
     clickToDiscover: '<br>Click to discover the languages that resonate in each one',
-    areaSelected: 'You are viewing a total of {count} languages from the area: {area}',
+    areaSelected: 'You are viewing a total of {count} languages from the area:<br>{area}',
     languageSelected: 'You are viewing {count} figures whose mother tongue is: {language}',
-    nationSelected: 'You are viewing {count} figures born in: {nation}',
+    nationSelected: 'You are viewing {count} figures born in:<br>{nation}',
     descLanguageMother: 'Mother tongue: {lang}',
     descBornIn: 'Born in: {nation}',
     ring: {
@@ -90,4 +90,8 @@ export default {
     noResults: 'No results found.',
     total: 'Total',
   },
+  persona: {
+    bioTitle: 'Biography',    
+    lingueTitle: 'Languages',
+  }
 }
