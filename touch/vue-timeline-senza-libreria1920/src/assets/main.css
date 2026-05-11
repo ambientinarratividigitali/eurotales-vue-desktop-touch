@@ -85,6 +85,13 @@ html, body, #app {
   -webkit-touch-callout: none; 
   user-select: none;          
 }
+
+html, body, #app, * {
+  cursor: none !important;
+  /* Impedisce anche la selezione del testo che spesso fa apparire cursori a barra */
+  user-select: none;
+  -webkit-user-select: none;
+}
 button { cursor: pointer; border: none; font-family: inherit; color: inherit; background: none; touch-action: manipulation; }
 img { max-width: 100%; height: auto; }
 
