@@ -16,6 +16,7 @@ export default {
     zoomOut: 'Zoom out',
     instruction: 'Tap a marker to view details',
     reset: 'Reset',
+    noResults: 'No results match the selected filters',
   },
   fields: {
     language: 'Language',

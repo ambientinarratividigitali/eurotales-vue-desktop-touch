@@ -54,6 +54,10 @@
           </div>
         </div>
       </div>
+      <!-- Messaggio "nessun risultato" -->
+      <div v-if="!props.events.length" class="tl-empty">
+        {{ t('ui.noResults') }}
+      </div>
     </div>
   </div>
 </template>
@@ -411,5 +415,22 @@ defineExpose({
   color: rgba(0, 0, 0, 0.7);
   white-space: nowrap;
   font-weight: 500;
+}
+
+.tl-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  font-family: var(--font-body);
+  font-size: clamp(20px, 2vw, 42px);
+  font-weight: 600;
+  color: var(--grigio-mid, #666);
+  font-style: italic;
+  pointer-events: none;
+  user-select: none;
 }
 </style>
