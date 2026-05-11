@@ -1,312 +1,468 @@
 <template>
-  <div ref="containerRef" class="timeline-container">
-    <div
-      ref="viewportRef"
-      class="tl-viewport"
-      @pointerdown="onPointerDown"
-      @pointermove="onPointerMove"
-      @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
-      @pointerleave="onPointerUp"
-    >
-      <div
-        ref="trackRef"
-        class="tl-track"
-        :style="{ width: trackWidth + 'px', transform: `translateX(${-scrollX}px)` }"
-      >
-        <div
-          v-for="m in placedMarkers"
-          :key="`tick-${m.id}`"
-          class="tl-tick"
-          :class="{ active: activeId === m.id }"
-          :style="{ left: m.tickX + 'px', top: m.tickTop + 'px', height: m.tickHeight + 'px' }"
-        />
-
-        <button
-          v-for="m in placedMarkers"
-          :key="`marker-${m.id}`"
-          class="tl-marker"
-          :class="{ active: activeId === m.id }"
-          :style="{
-            left: m.boxX + 'px',
-            top:  m.boxY + 'px',
-            width:  markerWidth + 'px',
-            height: markerHeight + 'px',
-            backgroundColor: m.color,
-            color: m.textColor,
-            borderColor: m.hasImage ? '#bababa' : 'transparent',
-            borderWidth: m.hasImage ? '4px' : '0',
-          }"
-          @click.stop="onMarkerClick(m.id)"
-        >
-          <span class="tl-marker-headline">{{ m.label }}</span>
-        </button>
-
-        <div class="tl-axis" :style="{ top: axisTop + 'px' }">
-          <div
-            v-for="t in yearTicks"
-            :key="t.year"
-            class="tl-year-tick"
-            :class="{ major: t.major }"
-            :style="{ left: t.x + 'px' }"
-          >
-            <span v-if="t.major" class="tl-year-label">{{ t.year }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div ref="containerRef" class="timeline-container"></div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+/**
+ * Wrapper Vue attorno alla libreria TimelineJS3 di KnightLab.
+ * - Riceve gli eventi già localizzati via prop `events`.
+ * - Emette `marker-click` quando l'utente seleziona un marker.
+ * - Re-renderizza l'intera timeline quando cambiano gli eventi o la lingua,
+ *   usando un :key esterno (gestito dalla view).
+ */
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-
 const { t } = useI18n()
 
 const props = defineProps({
   events: { type: Array, required: true },
+  /** Mappa idEvento → colore-marker, per re-stilare i marker dopo il render */
   markerStyles: { type: Object, default: () => ({}) },
 })
 const emit = defineEmits(['marker-click', 'ready'])
 
 const containerRef = ref(null)
-const viewportRef  = ref(null)
-const trackRef     = ref(null)
+let tl = null
 
-const viewportWidth  = ref(0)
-const viewportHeight = ref(0)
+// Sequenza di zoom dell'asse temporale.
+// Indici bassi = vista compressa (più anni visibili).
+// Indici alti = vista dilatata (meno anni visibili → zoom-in temporale).
+// Adatta alla nostra timeline: 500 d.C. → 2000 d.C.
+const ZOOM_SEQUENCE = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+const ZOOM_INITIAL  = 0  // indice in ZOOM_SEQUENCE: 0 = massimo zoom-out
 
-const ZOOM_PX_PER_YEAR = [4, 7, 12, 20, 32, 50, 80, 130, 210]
-const ZOOM_INITIAL = 0
-const currentZoom = ref(ZOOM_INITIAL)
-const pxPerYear = computed(() => ZOOM_PX_PER_YEAR[currentZoom.value])
-
-const TIMELINE_YEAR_MIN = 400
-const TIMELINE_YEAR_MAX = 2100
-
-const yearMin = computed(() => TIMELINE_YEAR_MIN)
-const yearMax = computed(() => TIMELINE_YEAR_MAX)
-
-const PAD_YEARS = 0
-
-const trackWidth = computed(() => {
-  const span = (yearMax.value - yearMin.value) + 2 * PAD_YEARS
-  return Math.max(span * pxPerYear.value, viewportWidth.value)
-})
-
-const markerWidth  = ref(160)
-const markerHeight = ref(110)
-
-function updateMarkerSize() {
-  const vw = window.innerWidth
-  const vh = window.innerHeight
-  markerWidth.value  = Math.max(130, Math.min(220, vw * 0.11))
-  markerHeight.value = Math.max(90,  Math.min(160, vh * 0.09))
+const tlOptions = {
+  duration: 1,
+  default_bg_color: '#47474724',
+  font: 'https://eurotales.eu/wp-content/themes/emaurri/timeline/TimeLine/MyCustomFont.css',
+  timenav_height_percentage: 90,
+  zoom_sequence: ZOOM_SEQUENCE,
+  initial_zoom: ZOOM_INITIAL,
 }
 
-const ROW_GAP = 8
-const TICK_SPACE = 60
-const AXIS_HEIGHT = 40
+// Indice di zoom corrente; modificato da zoomIn/zoomOut
+let currentZoom = ZOOM_INITIAL
 
-function yearToX(year) {
-  return (year - yearMin.value + PAD_YEARS) * pxPerYear.value
+function buildData() {
+  return {
+    events: props.events.map(e => ({
+      unique_id: String(e.id),
+      text: { headline: e.nome, text: e.nome },
+      start_date: { year: e.anno },
+    })),
+  }
 }
 
-const placedMarkers = computed(() => {
-  if (!props.events.length || !viewportHeight.value) return []
+function applyMarkerStyles() {
+  if (!tl?.config?.events) return
+  tl.config.events.forEach(ev => {
+    const style = props.markerStyles[ev.unique_id]
+    if (!style) return
+    const el = document.getElementById(`${ev.unique_id}-marker`)
+    if (!el) return
 
-  const sorted = [...props.events].sort((a, b) => a.anno - b.anno)
-  const usableH = viewportHeight.value - TICK_SPACE - AXIS_HEIGHT
-  const rowH = markerHeight.value + ROW_GAP
-  const maxRows = Math.max(1, Math.floor(usableH / rowH))
-  const rowEndX = new Array(maxRows).fill(-Infinity)
+    // Colore sfondo del marker
+    const container = el.querySelector('.tl-timemarker-content-container')
+    if (container) container.style.backgroundColor = style.color
 
-  return sorted.map(ev => {
-    const tickX = yearToX(ev.anno)
-    const boxX  = tickX - markerWidth.value / 2
-
-    let row = 0
-    for (let r = 0; r < maxRows; r++) {
-      if (boxX >= rowEndX[r] + 4) { row = r; break }
-      if (r === maxRows - 1) row = r
+    // Bordo se ha immagine
+    if (style.hasImage && container) {
+      container.style.borderColor = '#bababa'
+      container.style.borderWidth = '4px'
     }
-    rowEndX[row] = boxX + markerWidth.value
 
-    const boxY = row * rowH
-    const tickTop = boxY + markerHeight.value
-    const tickBottom = viewportHeight.value - AXIS_HEIGHT
-    const tickHeight = Math.max(0, tickBottom - tickTop)
-
-    const style = props.markerStyles[String(ev.id)] || {}
-    return {
-      id: String(ev.id),
-      label: ev.nome,
-      boxX, boxY, tickX, tickTop, tickHeight,
-      color: style.color || '#3a8fbd',
-      textColor: style.whiteText ? 'white' : '#1a1a1a',
-      hasImage: !!style.hasImage,
-    }
+    // Colore testo — seleziona tutti gli elementi di testo dentro il marker
+    const textColor = style.whiteText ? 'white' : '#1a1a1a'
+    console.log(`Applying text color ${textColor} to marker ${ev.unique_id}`)
+    el.querySelectorAll('.tl-headline, .tl-timemarker-text, p, span').forEach(textEl => {
+      textEl.style.setProperty('color', textColor, 'important')
+    })
   })
-})
-
-const axisTop = computed(() => viewportHeight.value - AXIS_HEIGHT)
-
-const yearTicks = computed(() => {
-  if (!props.events.length) return []
-  const span = yearMax.value - yearMin.value
-  if (span <= 0) return []
-
-  const targetMajorPx = 120
-  const yearsPerMajor = Math.max(1, Math.round(targetMajorPx / pxPerYear.value))
-  const niceSteps = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000]
-  const major = niceSteps.find(s => s >= yearsPerMajor) || 1000
-  const minor = Math.max(1, Math.floor(major / 5))
-
-  const startYear = Math.floor((yearMin.value - PAD_YEARS) / minor) * minor
-  const endYear   = yearMax.value + PAD_YEARS
-
-  const ticks = []
-  for (let y = startYear; y <= endYear; y += minor) {
-    ticks.push({ year: y, x: yearToX(y), major: y % major === 0 })
-  }
-  return ticks
-})
-
-const scrollX = ref(0)
-
-function clampScroll(x) {
-  const max = Math.max(0, trackWidth.value - viewportWidth.value)
-  return Math.max(0, Math.min(max, x))
 }
 
-const activeId = ref(null)
-
-function onMarkerClick(id) {
-  activeId.value = id
-  emit('marker-click', id)
-}
-
-const DRAG_THRESHOLD = 8
-let pointerStartX = 0
-let scrollStartX  = 0
-let pointerActive = false
-let pointerIsDrag = false
-let pointerId     = null
-
-function onPointerDown(e) {
-  pointerStartX = e.clientX
-  scrollStartX  = scrollX.value
-  pointerActive = true
-  pointerIsDrag = false
-  pointerId = e.pointerId
-}
-
-function onPointerMove(e) {
-  if (!pointerActive) return
-  const dx = e.clientX - pointerStartX
-
-  if (!pointerIsDrag) {
-    if (Math.abs(dx) < DRAG_THRESHOLD) return
-    pointerIsDrag = true
-    try { viewportRef.value?.setPointerCapture(pointerId) } catch (_) {}
+async function setup() {
+  if (!containerRef.value || !window.TL) return
+  if (!props.events || props.events.length === 0) {
+    const msg = t('errors.fetchFailed')
+    containerRef.value.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:5.2rem;">
+        ${msg}
+      </div>`
+    return
   }
 
-  scrollX.value = clampScroll(scrollStartX - dx)
-}
+  // ── Aspetta CSS + font prima di costruire la timeline ────────────
+  // TimelineJS misura l'altezza dei marker e dei tick al momento del
+  // render. Se il CSS di TimelineJS o il font Eurotales arrivano dopo
+  // (cache vuota / hard reload), le misure vengono prese su elementi
+  // non ancora stilizzati → tick troppo corti, gap tra marker e asse.
+  // Con cache calda invece tutto è istantaneo e funziona.
+  await waitForStylesAndFonts()
 
-function onPointerUp() {
-  if (!pointerActive) return
-  pointerActive = false
-  if (pointerIsDrag && pointerId != null) {
-    try { viewportRef.value?.releasePointerCapture(pointerId) } catch (_) {}
+  // Pulisci eventuale istanza precedente
+  containerRef.value.innerHTML = ''
+  tl = new window.TL.Timeline(containerRef.value, buildData(), tlOptions)
+  tl._onTimeNavLoaded = () => {
+    setTimeout(() => {
+      applyMarkerStyles()
+      tl.setZoom(ZOOM_INITIAL)
+      currentZoom = ZOOM_INITIAL
+      attachTouchHandlers()
+      attachMarkerClickHandlers()
+      scrollToStart()
+      // ── FIX TICK A METÀ SU TOUCH/HARD RELOAD ──────────────────
+      // TimelineJS calcola l'altezza dei tick una sola volta al primo
+      // render, basandosi sulle dimensioni dei marker. Su touch il
+      // calcolo iniziale è sbagliato (probabilmente perché TL.Browser
+      // rileva touch e applica un layout interno con offset diversi
+      // mentre il CSS sta ancora venendo applicato).
+      // Forziamo il ricalcolo simulando un resize, che fa rieseguire
+      // tutti i metodi interni _calculateSize / _assignRowsToMarkers /
+      // _positionMarkers dopo che il DOM è completamente stabile.
+      forceRecomputeLayout()
+      emit('ready', tl)
+    }, 500)
   }
-  pointerId = null
+
+  tl._onSlideChange = (e) => {
+    emit('marker-click', e.unique_id)
+  }
 }
 
-let _resizeObs = null
+// Forza TimelineJS a ricalcolare tutte le sue dimensioni interne.
+// Usato dopo l'inizializzazione per correggere il bug dei tick a metà
+// che si presenta su touchscreen quando il rendering iniziale avviene
+// con il CSS non ancora completamente applicato.
+function forceRecomputeLayout() {
+  if (!tl) return
 
-function measureViewport() {
-  if (!viewportRef.value) return
-  viewportWidth.value  = viewportRef.value.clientWidth
-  viewportHeight.value = viewportRef.value.clientHeight
-  updateMarkerSize()
+  // Strategia 1: chiama updateDisplay() esplicitamente — è il metodo
+  // pubblico di TimelineJS3 che ricalcola tutte le altezze e riposiziona
+  // marker, tick e asse temporale.
+  if (typeof tl.updateDisplay === 'function') {
+    tl.updateDisplay()
+  }
+
+  // Strategia 2: anche il TimeNav interno ha _updateDisplay(). Lo
+  // chiamiamo direttamente per forzare il ricalcolo delle altezze
+  // dei marker e dei tick (dove viene generato il gap).
+  setTimeout(() => {
+    if (!tl) return
+    if (tl._timenav?._updateDisplay) {
+      try {
+        tl._timenav._updateDisplay()
+      } catch (e) { console.warn('updateDisplay timenav failed', e) }
+    }
+    // Strategia 3: dispatch resize event come fallback estremo —
+    // TimelineJS aggancia un listener su window.resize che richiama
+    // tutto il pipeline di layout.
+    window.dispatchEvent(new Event('resize'))
+  }, 100)
 }
 
-function getOrderedMarkers() {
-  return [...props.events].sort((a, b) => a.anno - b.anno)
+// Aspetta che (1) tutti i <link rel="stylesheet"> esterni siano caricati
+// e (2) i font siano pronti. Risolve il bug "tick a metà su hard reload":
+// senza questa attesa TimelineJS può costruirsi prima che timeline.css
+// sia applicato → misura altezze sbagliate.
+function waitForStylesAndFonts() {
+  const cssPromises = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+    .map(link => {
+      // Se lo stylesheet è già caricato, link.sheet è non-null e accessibile
+      try {
+        if (link.sheet && link.sheet.cssRules) return Promise.resolve()
+      } catch (_) { /* cross-origin: cssRules getta, ma sheet esiste = caricato */
+        if (link.sheet) return Promise.resolve()
+      }
+      // Altrimenti aspetta load/error
+      return new Promise(resolve => {
+        const done = () => {
+          link.removeEventListener('load',  done)
+          link.removeEventListener('error', done)
+          resolve()
+        }
+        link.addEventListener('load',  done, { once: true })
+        link.addEventListener('error', done, { once: true })
+        // Safety net: max 3 secondi di attesa per stylesheet
+        setTimeout(done, 3000)
+      })
+    })
+
+  const fontPromise = (document.fonts && document.fonts.ready)
+    ? document.fonts.ready.catch(() => {})
+    : Promise.resolve()
+
+  return Promise.all([...cssPromises, fontPromise])
 }
 
-function navigateMarker(delta) {
-  const list = getOrderedMarkers()
-  if (!list.length) return
-
-  let idx = list.findIndex(e => String(e.id) === activeId.value)
-  if (idx < 0) idx = 0
-
-  const next = Math.max(0, Math.min(list.length - 1, idx + delta))
-  if (next === idx && activeId.value !== null) return
-
-  const target = list[next]
-  activeId.value = String(target.id)
-  centerOnYear(target.anno)
-  //emit('marker-click', String(target.id)) //se voglio che ad ogni click della freccia si veda il popup scommenta
-}
-
-function centerOnYear(year) {
-  const x = yearToX(year)
-  scrollX.value = clampScroll(x - viewportWidth.value / 2)
-}
-
-function setZoomIndex(idx) {
-  const clamped = Math.max(0, Math.min(ZOOM_PX_PER_YEAR.length - 1, idx))
-  if (clamped === currentZoom.value) return
-
-  const centerYear = (scrollX.value + viewportWidth.value / 2) / pxPerYear.value + yearMin.value - PAD_YEARS
-  currentZoom.value = clamped
-  nextTick(() => { centerOnYear(centerYear) })
-}
-
+// Sposta lo slider all'inizio della timeline (primo marker visibile a sinistra).
+// Da chiamare dopo il caricamento iniziale e ogni volta che cambiano gli eventi.
 function scrollToStart() {
-  scrollX.value = 0
+  if (!tl) return
+  const slider = tl?._timenav?._el?.slider
+  const mask   = tl?._timenav?._el?.marker_container_mask
+  if (!slider || !mask) return
+
+  // Ferma qualsiasi animazione interna di TimelineJS
+  if (tl._timenav?.animator?.stop) tl._timenav.animator.stop()
+  if (tl._timenav?._swipable?.stopMomentum) tl._timenav._swipable.stopMomentum()
+
+  // Lo slider con left = visibleW/2 mette il primo marker al bordo sinistro
+  // dell'area visibile (perché lo slider stesso ha origine al centro).
+  const visibleW = mask.offsetWidth || 0
+  const totalW   = slider.offsetWidth || 1
+  const targetLeft = visibleW / 2
+
+  slider.style.transition = 'none'
+  slider.className = 'tl-timenav-slider'
+  slider.style.left = `${targetLeft}px`
+
+  // Aggiorna i constraint dello swipable interno
+  if (tl._timenav?._swipable?.updateConstraint) {
+    tl._timenav._swipable.updateConstraint({
+      top: false, bottom: false,
+      left: visibleW / 2,
+      right: -(totalW - visibleW / 2),
+    })
+  }
 }
 
-onMounted(async () => {
-  await nextTick()
-  measureViewport()
 
-  if (typeof ResizeObserver !== 'undefined' && viewportRef.value) {
-    _resizeObs = new ResizeObserver(() => { measureViewport() })
-    _resizeObs.observe(viewportRef.value)
-  } else {
-    window.addEventListener('resize', measureViewport)
+// TimelineJS3 ha un supporto touch interno ma inaffidabile. Lo bypassiamo:
+// agganciamo direttamente il dito allo slider della timenav, calcolando lo
+// spostamento e settando .style.left con i constraint corretti.
+// Distinguiamo tap (no movimento) da drag (movimento > soglia) per non
+// bloccare il click sui marker.
+const DRAG_THRESHOLD = 8 // px: sotto questa soglia consideriamo un tap
+let touchStartX = 0
+let sliderStartLeft = 0
+let touchActive = false
+let isDragging = false
+
+function attachTouchHandlers() {
+  const timenav = containerRef.value?.querySelector('.tl-timenav')
+  if (!timenav) return
+
+  timenav.addEventListener('touchstart', onTouchStart, { passive: true })
+  timenav.addEventListener('touchmove',  onTouchMove,  { passive: false })
+  timenav.addEventListener('touchend',   onTouchEnd,   { passive: true })
+}
+
+function onTouchStart(e) {
+  if (e.touches.length !== 1) return
+  const slider = tl?._timenav?._el?.slider
+  if (!slider) return
+
+  touchStartX = e.touches[0].clientX
+  sliderStartLeft = parseFloat(slider.style.left || '0')
+  touchActive = true
+  isDragging = false
+
+  // NON chiamiamo preventDefault qui: lasciamo che il browser inizi a
+  // valutare se è un tap (per il click sul marker) o un movimento.
+}
+
+function onTouchMove(e) {
+  if (!touchActive || e.touches.length !== 1) return
+  const slider = tl?._timenav?._el?.slider
+  const mask   = tl?._timenav?._el?.marker_container_mask
+  if (!slider || !mask) return
+
+  const dx = e.touches[0].clientX - touchStartX
+
+  // Se non abbiamo ancora deciso se è drag, controlla la soglia
+  if (!isDragging) {
+    if (Math.abs(dx) < DRAG_THRESHOLD) return
+    // Superata la soglia: ora è un drag
+    isDragging = true
+
+    // Ferma le animazioni e disattiva la transition CSS
+    if (tl._timenav?.animator?.stop) tl._timenav.animator.stop()
+    if (tl._timenav?._swipable?.stopMomentum) tl._timenav._swipable.stopMomentum()
+    slider.style.transition = 'none'
   }
 
-  await nextTick()
-  scrollToStart()
-  emit('ready', { custom: true })
-})
+  let newLeft = sliderStartLeft + dx
 
-onBeforeUnmount(() => {
-  _resizeObs?.disconnect()
-  _resizeObs = null
-  window.removeEventListener('resize', measureViewport)
-})
+  // Constraint: lo slider va da visibleW/2 (inizio) a -(totalW - visibleW/2) (fine)
+  const totalW   = slider.offsetWidth || 1
+  const visibleW = mask.offsetWidth   || 0
+  const maxLeft  = visibleW / 2
+  const minLeft  = -(totalW - visibleW / 2)
 
-watch(() => props.events, () => {
-  nextTick(() => { measureViewport(); scrollToStart() })
-})
+  if (newLeft > maxLeft) newLeft = maxLeft
+  if (newLeft < minLeft) newLeft = minLeft
+
+  slider.style.left = `${newLeft}px`
+
+  // Solo durante il drag effettivo blocchiamo lo scroll della pagina
+  e.preventDefault()
+}
+
+function onTouchEnd() {
+  if (!touchActive) return
+  touchActive = false
+
+  const slider = tl?._timenav?._el?.slider
+  if (slider) {
+    // Riattiva la transition per click successivi
+    slider.style.transition = ''
+  }
+
+  // Se non era un drag, lasciamo che il tap arrivi al marker normalmente.
+  isDragging = false
+}
+
+// Aggancia un listener click diretto su ogni marker del DOM.
+// Serve per emettere marker-click anche quando si riclicca il marker già attivo,
+// caso in cui TimelineJS non emette _onSlideChange.
+function attachMarkerClickHandlers() {
+  if (!containerRef.value || !tl?.config?.events) return
+  tl.config.events.forEach(ev => {
+    const el = document.getElementById(`${ev.unique_id}-marker`)
+    if (!el) return
+    el.addEventListener('click', () => {
+      emit('marker-click', ev.unique_id)
+    })
+  })
+}
+
+onMounted(setup)
+onBeforeUnmount(() => { tl = null })
+
+// Cambia il livello di zoom dell'asse temporale mantenendo il punto di vista.
+//
+// Il problema: tl.setZoom() internamente chiama goToId(current_id), che
+// avvia un'animazione per centrare lo slider sul marker attivo (di solito
+// il primo evento). Vogliamo invece preservare la posizione di scroll.
+//
+// Strategia:
+//   1. Prima di setZoom: leggo la posizione di scroll attuale come frazione
+//      0..1 del range scrollabile.
+//   2. Chiamo setZoom() che lascia TimelineJS ridisegnare l'asse e i marker.
+//   3. Dopo che il resize è completato, FERMO l'animazione interna di
+//      TimelineJS (`tl._timenav.animator.stop()`) e riposiziono lo slider
+//      sulla stessa frazione, calcolata sulla NUOVA larghezza totale.
+//   4. Aggiorno i constraint dello swipable per i nuovi limiti.
+function setZoomIndex(idx) {
+  if (!tl) return
+  const clamped = Math.max(0, Math.min(ZOOM_SEQUENCE.length - 1, idx))
+  if (clamped === currentZoom) return
+
+  // ── 1. Leggi la frazione di scroll PRIMA dello zoom ──────────────
+  const slider1 = tl?._timenav?._el?.slider
+  const mask1   = tl?._timenav?._el?.marker_container_mask
+  let scrollFraction = 0  // default: scroll all'inizio
+
+  if (slider1 && mask1) {
+    const currentLeft = parseFloat(slider1.style.left || '0')
+    const totalW1  = slider1.offsetWidth || 1
+    const visibleW = mask1.offsetWidth   || 0
+    // Lo slider in TimelineJS ha left che varia tra (visibleW/2) [inizio]
+    // e -(totalW - visibleW/2) [fine]. Lo scroll va da 0 (inizio) a maxScroll.
+    // Convertiamo in scroll-from-left positivo:
+    //   leftAtStart = visibleW/2  →  scroll = 0
+    //   leftAtEnd   = -(totalW - visibleW/2)  →  scroll = totalW - visibleW
+    const scrollFromLeft = (visibleW / 2) - currentLeft  // sempre >= 0
+    const maxScroll = totalW1 - visibleW
+    if (maxScroll > 0) {
+      scrollFraction = scrollFromLeft / maxScroll
+      scrollFraction = Math.max(0, Math.min(1, scrollFraction))
+    }
+  }
+
+  currentZoom = clamped
+  tl.setZoom(clamped)
+
+  // ── 2/3. Dopo il resize, ferma l'animazione interna e riposiziona ──
+  // Uso un secondo timeout con un margine extra perché TimelineJS prima
+  // ridisegna (sincrono) e poi avvia animator (asincrono ~1000ms).
+  // Lo fermo subito così non sovrascrive il mio reposition.
+  setTimeout(() => {
+    if (!tl) return
+
+    // Ferma l'animazione che TimelineJS ha avviato per centrare il marker
+    if (tl._timenav?.animator?.stop) {
+      tl._timenav.animator.stop()
+    }
+    if (tl._timenav?._swipable?.stopMomentum) {
+      tl._timenav._swipable.stopMomentum()
+    }
+
+    const slider2 = tl?._timenav?._el?.slider
+    const mask2   = tl?._timenav?._el?.marker_container_mask
+    if (slider2 && mask2) {
+      const totalW2  = slider2.offsetWidth || 1
+      const visibleW = mask2.offsetWidth   || 0
+      const maxScroll = totalW2 - visibleW
+      if (maxScroll > 0) {
+        // Rovescio la formula: targetLeft = visibleW/2 - scrollFromLeft
+        const scrollFromLeft = scrollFraction * maxScroll
+        const targetLeft = (visibleW / 2) - scrollFromLeft
+        // Disattivo CSS transition mentre setto, per evitare animazioni
+        slider2.className = 'tl-timenav-slider'
+        slider2.style.left = `${targetLeft}px`
+
+        // Aggiorna i constraint dello swipable interno (per drag manuale)
+        if (tl._timenav?._swipable?.updateConstraint) {
+          tl._timenav._swipable.updateConstraint({
+            top: false, bottom: false,
+            left: visibleW / 2,
+            right: -(totalW2 - visibleW / 2),
+          })
+        }
+      }
+    }
+
+    applyMarkerStyles()
+  }, 50)  // 50ms basta: setZoom completa il redraw sincronamente, poi avvia
+          // animator. Lo fermiamo prima che parta sul serio.
+}
+
+
+// Naviga al marker precedente o successivo nella timeline (delta = -1 o +1).
+// TimelineJS espone goToId() e config.events ordinati per data.
+// Troviamo l'evento corrente tramite _timenav._current_time, poi scorriamo
+// all'evento adiacente.
+function navigateMarker(delta) {
+  if (!tl) return
+
+  // Lista degli eventi ordinata per anno (come li ha costruiti buildData)
+  const events = tl.config?.events
+  if (!events || events.length === 0) return
+
+  // Trova l'indice corrente guardando quale marker è "active" nel DOM,
+  // oppure usa _current_time come fallback
+  let currentIdx = -1
+
+  // Metodo 1: cerca l'elemento attivo nel DOM
+  const activeEl = containerRef.value?.querySelector('.tl-timemarker.tl-timemarker-active')
+  if (activeEl) {
+    const activeId = activeEl.id?.replace('-marker', '')
+    currentIdx = events.findIndex(e => String(e.unique_id) === String(activeId))
+  }
+
+  // Metodo 2: fallback → primo evento
+  if (currentIdx < 0) currentIdx = 0
+
+  const nextIdx = Math.max(0, Math.min(events.length - 1, currentIdx + delta))
+  if (nextIdx === currentIdx) return
+
+  const targetId = events[nextIdx].unique_id
+  tl.goToId(targetId)
+
+
+}
 
 defineExpose({
-  zoomIn()  { setZoomIndex(currentZoom.value + 1) },
-  zoomOut() { setZoomIndex(currentZoom.value - 1) },
+  zoomIn()  { setZoomIndex(currentZoom + 1) },
+  zoomOut() { setZoomIndex(currentZoom - 1) },
   prevMarker() { navigateMarker(-1) },
   nextMarker() { navigateMarker(+1) },
   scrollToStart,
-  getZoomLevel() { return currentZoom.value },
+  getZoomLevel() { return currentZoom },
   getZoomMin()   { return 0 },
-  getZoomMax()   { return ZOOM_PX_PER_YEAR.length - 1 },
-  getInstance()  { return null },
+  getZoomMax()   { return ZOOM_SEQUENCE.length - 1 },
+  getInstance()  { return tl },
 })
 </script>
 
@@ -316,102 +472,11 @@ defineExpose({
   inset: 0;
   z-index: var(--z-content);
   background: transparent;
-  overflow: hidden;
 }
 
-.tl-viewport {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.18);
-  touch-action: none;
-  user-select: none;
+/* La timeline interna deve usare tutta l'altezza disponibile */
+.timeline-container :deep(.tl-timeline) {
+  height: 100% !important;
 }
 
-.tl-tick {
-  position: absolute;
-  width: 1px;
-  background: rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-  transition: background 0.2s ease, width 0.2s ease;
-}
-
-.tl-tick.active {
-  width: 3px;
-  background: var(--rosso, #912B3D);
-  box-shadow: 0 0 8px rgba(145, 43, 61, 0.6);
-}
-
-.tl-marker {
-  position: absolute;
-  border-style: solid;
-  border-radius: 8px;
-  padding: 8px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: clamp(12px, 1.1vw, 22px);
-  line-height: 1.25;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 80ms ease, box-shadow 0.2s ease;
-}
-.tl-marker:active { transform: scale(0.96); }
-.tl-marker.active {
-  box-shadow: 0 0 0 3px var(--rosso, #912B3D), 0 4px 12px rgba(0, 0, 0, 0.25);
-  z-index: 2;
-}
-
-.tl-marker-headline {
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.tl-tick {
-  position: absolute;
-  width: 1px;
-  background: rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-}
-
-.tl-axis {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 40px;
-  border-top: 1px solid rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-}
-
-.tl-year-tick {
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.4);
-}
-.tl-year-tick.major {
-  height: 12px;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.tl-year-label {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(10px, 0.85vw, 16px);
-  font-family: var(--font-body);
-  color: rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
-  font-weight: 500;
-}
 </style>

@@ -82,11 +82,11 @@ function toggleCategory(id) {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: clamp(13px, 1.3vw, 26px) var(--sp-4);
+  padding: clamp(10px, 1vw, 20px) var(--sp-4);
   background: rgba(255, 255, 255, 0.95);
   border-top: 2px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  min-height: clamp(117px, 11.7vw, 195px);
+  min-height: clamp(90px, 9vw, 150px);
 }
 
 /* ── Zoom ───────────────────────────────────────────────── */
@@ -97,9 +97,9 @@ function toggleCategory(id) {
 }
 
 .zoom-btn {
-  width: clamp(73px, 6.5vw, 117px);
-  height: clamp(73px, 6.5vw, 117px);
-  font-size: clamp(31px, 3.2vw, 57px);
+  width: clamp(56px, 5vw, 90px);
+  height: clamp(56px, 5vw, 90px);
+  font-size: clamp(24px, 2.5vw, 44px);
   border-radius: 50%;
   background: var(--rosso);
   color: white;
@@ -134,14 +134,14 @@ function toggleCategory(id) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: clamp(57px, 5.2vw, 94px);
-  padding: 0.5em 1.3em;
+  min-height: clamp(44px, 4vw, 72px);
+  padding: 0.45em 1.2em;
   border-radius: 8px;
   border: 2px solid rgba(0,0,0,0.18);
   background: rgba(255,255,255,0.7);
   color: var(--grigio-mid);
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.4vw, 29px);
+  font-size: clamp(12px, 1.1vw, 22px);
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -170,11 +170,11 @@ function toggleCategory(id) {
 }
 
 .lang-btn {
-  padding: 0.6em 1.4em;
-  min-height: clamp(62px, 5.5vw, 99px);
-  min-width: clamp(73px, 6.5vw, 117px);
+  padding: 0.5em 1.2em;
+  min-height: clamp(48px, 4.2vw, 76px);
+  min-width: clamp(56px, 5vw, 90px);
   border-radius: var(--radius-pill);
-  font-size: clamp(17px, 1.6vw, 29px);
+  font-size: clamp(13px, 1.2vw, 22px);
   font-weight: 700;
   letter-spacing: 0.06em;
   background: var(--grigio-light);
