@@ -1,13 +1,6 @@
-<template>
-  <TimelineView />
-</template>
-
 <script setup>
 import TimelineView from './views/TimelineView.vue'
 import { onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 const IDLE_MS = 120_000
 let idleTimer = null
@@ -15,10 +8,7 @@ let idleTimer = null
 function resetIdle() {
   clearTimeout(idleTimer)
   idleTimer = setTimeout(() => {
-    // Vai alla home solo se non ci sei già
-    if (router.currentRoute.value.path !== '/') {
-      router.push('/')
-    }
+    window.location.reload()
   }, IDLE_MS)
 }
 
@@ -34,3 +24,7 @@ onBeforeUnmount(() => {
   clearTimeout(idleTimer)
 })
 </script>
+
+<template>
+  <TimelineView />
+</template>
