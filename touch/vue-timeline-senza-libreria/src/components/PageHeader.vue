@@ -56,12 +56,12 @@ function getName(lang) { return store.linguaName(lang, locale.value) }
   padding: var(--sp-3) var(--sp-5);
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-  height: clamp(260px, 17vh, 520px);
+  height: clamp(260px, 19vh, 520px);
   flex-shrink: 0;
 }
 
 .logo-link {  align-items: center; height: 100%; }
-.logo { height: 80%; max-height: 170px; }
+.logo { height: clamp(40px,6vw,300px); }
 
 .filtrilingua-lingue{
   display: flex;
