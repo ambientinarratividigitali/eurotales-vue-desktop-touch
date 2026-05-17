@@ -21,6 +21,8 @@ export default {
     info: 'INFO',
     ieriDesc: 'Resonances in history',
     oggiDesc: 'Resonances in our streets',
+    greetings: 'OPENING SAPIENZA RECTOR',
+    greetingsErrors: 'Error'
   },
   ieri: {
     title: 'Resonances of Yesterday',

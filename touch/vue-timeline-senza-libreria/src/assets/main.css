@@ -122,15 +122,10 @@ html, body, #app {
   user-select: none;               /* tutti gli altri */
   /* Niente pull-to-refresh accidentale */
   overscroll-behavior: none;
-  cursor: none;
 }
 
 * {
   -webkit-touch-callout: none;
-}
-
-*, *::before, *::after {
-  cursor: none !important;
 }
 
 button {

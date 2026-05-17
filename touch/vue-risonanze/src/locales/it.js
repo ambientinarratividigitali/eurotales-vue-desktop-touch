@@ -20,6 +20,8 @@ export default {
     info: 'INFO',
     ieriDesc: 'Risonanze nella storia',
     oggiDesc: 'Risonanze nelle nostre strade',
+    greetings: 'SALUTI DALLA RETTRICE',
+    greetingsErrors: 'Errore nel caricamento del video'
   },
   ieri: {
     title: 'Risonanze di Ieri',

@@ -274,7 +274,7 @@ function resetLanguages() {
 
 .lang-item:disabled {
   opacity: 0.25;
-  cursor: not-allowed;
+  /*cursor: not-allowed;*/
 }
 
 /* ── Footer con bottone Azzera ───────────────────────────── */

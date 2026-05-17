@@ -1,18 +1,36 @@
 <template>
   <div class="home">
-    <!-- Cerchi animati di sfondo -->
     <div class="home-bg" aria-hidden="true">
       <div class="bg-circle bg-c1"></div>
       <div class="bg-circle bg-c2"></div>
       <div class="bg-circle bg-c3"></div>
     </div>
 
-    <!-- Logo Eurotales -->
     <header class="home-header">
       <logo />
     </header>
 
-    <!-- Titolo + cerchi navigazione -->
+    <div>
+      <button class="open-btn" @click="showVideo = true">
+        {{ t('home.greetings') }}
+      </button>
+
+      <div v-if="showVideo" class="video-modal">
+        <button class="close-btn" @click="closeVideo">
+          ✕
+        </button>
+        <video
+          ref="videoPlayer"
+          class="video-player"
+          controls
+          autoplay
+        >
+          <source src="/public/video/saluti-rettrice.mp4" type="video/mp4" />
+          {{ t('home.greetingsErrors') }}
+        </video>
+      </div>
+    </div>
+
     <div class="home-title">
       <h1>{{ t('home.title') }}</h1>
       <p>{{ t('home.subtitle') }}</p>
@@ -43,7 +61,6 @@
       </button>
     </nav>
 
-    <!-- Modale info -->
     <transition name="fade">
       <div class="modal-overlay" v-if="showInfo" @click.self="showInfo = false">
         <div class="modal-box modal-info">
@@ -64,7 +81,7 @@
         </div>
       </div>
     </transition>
-    <!-- Language switcher in alto a destra (solo qui, non c'è PageLayout) -->
+    
     <div class="home-lang">
       <button
         v-for="loc in ['it', 'en']"
@@ -86,6 +103,19 @@ import logo from '../components/Logo.vue'
 const router = useRouter()
 const { t, locale } = useI18n()
 const showInfo = ref(false)
+
+const showVideo = ref(false)
+const videoPlayer = ref(null)
+
+const closeVideo = () => {
+  showVideo.value = false
+
+  // ferma il video quando chiudi
+  if (videoPlayer.value) {
+    videoPlayer.value.pause()
+    videoPlayer.value.currentTime = 0
+  }
+}
 </script>
 
 <style scoped>
@@ -164,6 +194,72 @@ const showInfo = ref(false)
 
 @media (min-width: 2560px) {
   .lang-btn { min-height: 80px; min-width: 96px; }
+}
+
+/* Nuovo stile per il pulsante del Video, in linea con il Titolo */
+.open-btn {
+  position: relative;
+  z-index: 1;
+  padding: var(--sp-2) var(--sp-5);
+  margin-bottom: var(--sp-4);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid var(--w-30);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--tr-base);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.open-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.video-modal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.video-player {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: black;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10000;
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.1);
 }
 
 /* Titolo */
